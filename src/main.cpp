@@ -4,12 +4,11 @@
 #include "mbedtls/base64.h"
 #include "soc/soc.h"
 #include "soc/rtc_cntl_reg.h"
-#define RXD2 16
-#define TXD2 17
+#define RXD2 16 // hardware serial receive pin
+#define TXD2 17 // hardware serial trnsmit pin
 
-
-LegoHubController Controller(7);
-HardwareSerial hSerial(1);
+LegoHubController Controller(7); // An instance of the class LegoHubController with the maximum of 7 hubs
+HardwareSerial hSerial(1);       // A hardwareSerial object
 struct Data_Package
 {
     byte LjoyX;
@@ -33,14 +32,8 @@ struct Data_Package
     bool Button15;
     bool Button16;
 };
-Data_Package data;
-Data_Package prevData;
-bool Serialdata = false;
-int SerialDataCount = 0;
-bool SerialStopStart = true;
-bool SerialError = false;
-byte Serialchecksum = 0xa5;
-byte programHubCount = 0;
+
+// definitions for the joysticks and buttons
 
 #define RC_LX 0
 #define RC_LY 1
@@ -67,17 +60,96 @@ byte programHubCount = 0;
 
 // how much serial data we expect before a newline
 #define MAX_LENGHT 50
-char input_line[MAX_LENGHT];
-unsigned int input_pos = 0;
-char Base64Data[64];
-size_t joystickTimer0[4];
-size_t joystickTimer1[4];
+char input_line[MAX_LENGHT + 1]; // received bytes
+unsigned int input_pos = 0;      // how many bytes did we receive
+char Base64Data[MAX_LENGHT + 1]; // stores the base64 encoded data
+Data_Package data;               // struct for storing the data received from the serial port
+Data_Package prevData;           // struct for storing the previous data received from the serial port
 
-int returnval = 0;
+byte programHubCount = 0; // how many hubs are used in a program, max 7
+
 void updateConntroller();
-int joystickToButton(byte);
+uint16_t crc_xmodem_update(uint16_t crc, uint8_t data);
+void process_data(const char *ReceivedData);
+void processIncomingByte(const byte inByte);
+bool buttonpressed(int button);
 
+void setup()
+{
+    // initialize the serial connections to 115200 baud
+    Serial.begin(115200);
+    Serial2.begin(115200, SERIAL_8N1, RXD2, TXD2);
+    // initialize the controller
+    Controller.init();
+    if(programHubCount > 7)
+    {
+        // if the number iof hubs is too large stop.
+        log_e("Too many hubs: %i", programHubCount);
+        while(1);
+    }
+    // connect to {programHubCount} hubs
+    for (int i = 0; i < programHubCount; i++)
+    {
+        // initialize the HUB
+        Controller.initHub(i);
+        // wait 500 ms
+        for (size_t i = millis(); millis() - i < 500;)
+        {
+            yield();
+        }
+        // wait until the HUB connects
+        while (!Controller.ConnectToAHub(i))
+        {
+            yield();
+        }
+        // set the HUB's led color to blue
+        Controller.HUBS[i].Hub->setLedRGBColor(0, 0, 255);
+    }
+}
 
+void loop()
+{
+    // conntrol the HUBs and check the return variable
+    switch(Controller.ControlHubs(programHubCount)){
+    case 1:
+        log_e("invalid HUB number");        
+        break;
+    case 0:
+        // everything is fine
+        break;
+    default:
+        // someting went wrong..
+        log_e("Error");
+    }
+    int Number = 0; // local variable for storing data
+    // loop trought the analog variables(joysticks)
+    for (int i = 0; i < 4; i++)
+    {
+        // read the joystick value and map it to -100 ... 100
+        Number = map((*(&data.LjoyX + i)), 0, 255, -100, 100);
+        // make it to zero when it's wery close
+        if (Number > -3 && Number < 3)
+        {
+            Number = 0;
+        }
+        // store it in the controller
+        Controller.RemoteData[i] = Number;
+    }
+    // loop trought the digital variables(buttons)
+    for (int i = 4; i < sizeof(Data_Package); i++)
+    {
+        // store the data in the controller
+        Controller.RemoteData[i] = (*(&data.LjoyX + i));
+    }
+    // check if we ha dreceived serial data
+    updateConntroller();
+}
+/**
+ * calculate CRC
+ * @param crc the initial CRC
+ * @param data the input byte
+ * @returns the new CRC
+ */
 uint16_t crc_xmodem_update(uint16_t crc, uint8_t data)
 {
     int i;
@@ -92,41 +164,51 @@ uint16_t crc_xmodem_update(uint16_t crc, uint8_t data)
     return crc;
 }
 
-// here to process incoming serial data after a terminator received
+/**
+ * Process incoming serial data after a terminator received
+ * @param ReceivedData the data to process
+ * @returns void
+ */
 void process_data(const char *ReceivedData)
 {
-    if (ReceivedData[0] != '*')
+    if (ReceivedData[0] != '*') // the first charachter should be always '*'
     {
         log_e("No * received: %c, %x", ReceivedData[0], ReceivedData[0]);
         return;
     }
     int lenght = 0;
     for (lenght = 1; ReceivedData[lenght] != '*' && ReceivedData[lenght] != 0; lenght++)
-        ;
+        ; // count the carachters in the string
+    // including the start and end '*'
     uint16_t CRC = 0;
+    // loop trought the data
     for (int i = 0; i < lenght + 3; i++)
     {
+        // and calculate its CRC
         CRC = crc_xmodem_update(CRC, ReceivedData[i]);
     }
-    uint16_t ReceivedCRC = ReceivedData[lenght + 2];
-    ReceivedCRC += ReceivedData[lenght + 1] << 8;
+    // the last two bytes of the data contains the CRC, so if everything went good the CRC is zero
     if (CRC != 0)
     {
+        // else print the error message, and discard the data
         log_e("The received data is corrupted, the CRC is not zero: %x", CRC);
         return;
     }
+    // decrease lenght by 1 to exclude the '*' charachter in the end
     lenght--;
-    strcpy(Base64Data, &ReceivedData[1]);
+    // copy the data to a new string excludin the first '*' charachter
+    strncpy(Base64Data, &ReceivedData[1], MAX_LENGHT);
+    // add the ending zero to the string
     Base64Data[lenght] = '\0';
-    unsigned char output[64];
-    size_t outlen;
-    mbedtls_base64_decode(output, 64, &outlen, (const unsigned char *)Base64Data, lenght);
-    for (int i = 0; i < sizeof(Data_Package); i++)
-    {
-        (*(&data.LjoyX + i)) = output[i];
-    }
+    size_t outlen; //for storing the lenght of the data
+    mbedtls_base64_decode((unsigned char*)(*(&data.LjoyX)), sizeof(Data_Package), &outlen, (const unsigned char *)Base64Data, lenght);
 } // end of process_data
 
+/**
+ * Process incoming serial data
+ * @param inByte the byte to process
+ * @returns void
+ */
 void processIncomingByte(const byte inByte)
 {
 
@@ -155,62 +237,35 @@ void processIncomingByte(const byte inByte)
     } // end of switch
 
 } // end of processIncomingByte
-
-
+/**
+ * check if we had received data over the serial connection and process the received data
+ * @returns void
+*/
 void updateConntroller()
 {
     while (Serial2.available() > 0)
     {
+        // if data is available process it
         processIncomingByte(Serial2.read());
     }
 }
-
-void setup()
+/**
+ * @returns void
+*/
+bool buttonpressed(int button)
 {
-    Serial.begin(115200);
-    Serial2.begin(115200, SERIAL_8N1, RXD2, TXD2);
-    Controller.init();
-    for (int i = 0; i < programHubCount; i++)
+    if ((*((&data.Button1) + button)) && !(*((&prevData.Button1) + button)))
     {
-        Controller.initHub(i);
-        for (size_t i = millis(); millis() - i < 500;)
-        {
-            yield();
-        }
-        while (!Controller.ConnectToAHub(i))
-        {
-            yield();
-        }
-        Controller.HUBS[0].Hub->setLedRGBColor(0, 0, 255);
+        // if the button is pressed and we didn't checked it before, then set the status to checked
+        (*((&prevData.Button1) + button)) = true;
+        // and return true
+        return true;
     }
-}
-
-void loop()
-{
-
-    returnval = Controller.ControlHubs(programHubCount);
-    if (returnval == 1)
+    if (!*((&data.Button1) + button))
     {
-        log_e("Invalid Hub number.");
+        // if the button isn't pressed: set the status to checked
+        (*((&prevData.Button1) + button)) = false;
     }
-    int Number = 0;
-    for (int i = 0; i < 4; i++)
-    {
-        Number = map((*(&data.LjoyX + i)), 0, 255, -100, 100);
-        if (Number > -3 && Number < 3)
-        {
-            Number = 0;
-        }
-        Controller.vars[i] = Number;
-    }
-    for (int i = 4; i < sizeof(Data_Package); i++)
-    {
-        Number = (*(&data.LjoyX + i));
-        Controller.vars[i] = Number;
-        if (buttonpressed(i - 4))
-        {
-            Controller.vars[i + 16] = Controller.vars[i + 16] ? 0 : 1;
-        }
-    }
-    updateConntroller();
+    // else return false
+    return false;
 }

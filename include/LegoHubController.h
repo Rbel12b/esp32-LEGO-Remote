@@ -49,7 +49,8 @@ struct LegoHubController // An instance for Controlling Lego HUBS
     TechnicHUBConf *HUBS;
     byte HUBnumTable[8] = {0, 1, 2, 3, 4, 5, 6, 7};
     double vars[256];
-    byte data[MAX_PROG_MEM] = {0x02, 0, 1, 3, 0x02, 0, 0, 2, 0x06, 0, 0, 0x00, 0, 0, 0, 0, 0, 0};
+    int RemoteData[64];
+    byte HUBCode[MAX_PROG_MEM] = {0x02, 0, 1, 3, 0x02, 0, 0, 2, 0x06, 0, 0, 0x00, 0, 0, 0, 0, 0, 0};
 
 private:
     int _numHubs = 1;
@@ -59,7 +60,7 @@ private:
     uint8_t else_locations[6];
     int num_if = 0;
     /*
-    the value of the data variable is a binary code, what contains opcodes.
+    the value of the HUBCode variable is a binary code, what contains opcodes.
     The structure of the opcode descriptions is: (First Opcode name, then binary value,
     how many bytes long, description of the bytes)
     Every variable contains a singed integer.

@@ -61,7 +61,7 @@ int LegoHubController::ControlHubs(int numberOfHubs)
             log_debug("skip else: s=%i, e=%i, if statements",else_locations[num_if],else_end_locations[num_if], num_if);
         }
     }
-    switch (data[HUBCodeOffs++])
+    switch (HUBCode[HUBCodeOffs++])
     {
     case 0x00: // End of program
     {
@@ -70,77 +70,77 @@ int LegoHubController::ControlHubs(int numberOfHubs)
     }
     case 0x01: // Turn Motor by degrees
     {
-        if (data[HUBCodeOffs] >= _numHubs)
+        if (HUBCode[HUBCodeOffs] >= _numHubs)
         {
             HUBCodeOffs--;
             return 1; // Invalid Hub number
         }
         HUBCodeOffs++;
         HUBCodeOffs++;
-        var2 = vars[data[HUBCodeOffs++]];
-        log_debug("Turn Motor at port: %i, by %f degrees, hub: %i", data[HUBCodeOffs - 2], var2, HUBnumTable[data[HUBCodeOffs - 3]]);
-        HUBS[HUBnumTable[data[HUBCodeOffs - 3]]].Hub->setTachoMotorSpeedForDegrees(data[HUBCodeOffs - 2], 100, var2, 100, BrakingStyle::HOLD);
+        var2 = vars[HUBCode[HUBCodeOffs++]];
+        log_debug("Turn Motor at port: %i, by %f degrees, hub: %i", HUBCode[HUBCodeOffs - 2], var2, HUBnumTable[HUBCode[HUBCodeOffs - 3]]);
+        HUBS[HUBnumTable[HUBCode[HUBCodeOffs - 3]]].Hub->setTachoMotorSpeedForDegrees(HUBCode[HUBCodeOffs - 2], 100, var2, 100, BrakingStyle::HOLD);
         break;
     }
     case 0x02: // Turn on Motor with speed
     {
-        if (data[HUBCodeOffs] >= _numHubs)
+        if (HUBCode[HUBCodeOffs] >= _numHubs)
         {
             HUBCodeOffs--;
             return 1; // Invalid Hub number
         }
         HUBCodeOffs++;
         HUBCodeOffs++;
-        var2 = vars[data[HUBCodeOffs++]];
-        log_debug("Starting Motor at port: %i, speed: %f, hub: %i", data[HUBCodeOffs - 2], var2, HUBnumTable[data[HUBCodeOffs - 3]]);
-        HUBS[HUBnumTable[data[HUBCodeOffs - 3]]].Hub->setTachoMotorSpeed(data[HUBCodeOffs - 2], var2, 100, BrakingStyle::HOLD);
+        var2 = vars[HUBCode[HUBCodeOffs++]];
+        log_debug("Starting Motor at port: %i, speed: %f, hub: %i", HUBCode[HUBCodeOffs - 2], var2, HUBnumTable[HUBCode[HUBCodeOffs - 3]]);
+        HUBS[HUBnumTable[HUBCode[HUBCodeOffs - 3]]].Hub->setTachoMotorSpeed(HUBCode[HUBCodeOffs - 2], var2, 100, BrakingStyle::HOLD);
         break;
     }
     case 0x03: // Turn on Motor for milliseconds
     {
-        if (data[HUBCodeOffs] >= _numHubs)
+        if (HUBCode[HUBCodeOffs] >= _numHubs)
         {
             HUBCodeOffs--;
             return 1; // Invalid Hub number
         }
         HUBCodeOffs++;
         HUBCodeOffs++;
-        var2 = vars[data[HUBCodeOffs++]];
-        log_debug("Turn Motor at port: %i, for %f seconds, hub: %i", data[HUBCodeOffs - 2], var2 / 1000, HUBnumTable[data[HUBCodeOffs - 3]]);
-        HUBS[HUBnumTable[data[HUBCodeOffs - 3]]].Hub->setTachoMotorSpeedForTime(data[HUBCodeOffs - 2], 100, var2, 100, BrakingStyle::HOLD);
+        var2 = vars[HUBCode[HUBCodeOffs++]];
+        log_debug("Turn Motor at port: %i, for %f seconds, hub: %i", HUBCode[HUBCodeOffs - 2], var2 / 1000, HUBnumTable[HUBCode[HUBCodeOffs - 3]]);
+        HUBS[HUBnumTable[HUBCode[HUBCodeOffs - 3]]].Hub->setTachoMotorSpeedForTime(HUBCode[HUBCodeOffs - 2], 100, var2, 100, BrakingStyle::HOLD);
         break;
     }
     case 0x04: // Turn Motor to absolute position
     {
-        if (data[HUBCodeOffs] >= _numHubs)
+        if (HUBCode[HUBCodeOffs] >= _numHubs)
         {
             HUBCodeOffs--;
             return 1; // Invalid Hub number
         }
         HUBCodeOffs++;
         HUBCodeOffs++;
-        var2 = vars[data[HUBCodeOffs++]];
-        log_debug("Turn Motor at port: %i, to absolute position %f, hub: %i", data[HUBCodeOffs - 2], var2, HUBnumTable[data[HUBCodeOffs - 3]]);
-        HUBS[HUBnumTable[data[HUBCodeOffs - 3]]].Hub->setAbsoluteMotorPosition(data[HUBCodeOffs - 2], 100, var2, 100, BrakingStyle::HOLD);
+        var2 = vars[HUBCode[HUBCodeOffs++]];
+        log_debug("Turn Motor at port: %i, to absolute position %f, hub: %i", HUBCode[HUBCodeOffs - 2], var2, HUBnumTable[HUBCode[HUBCodeOffs - 3]]);
+        HUBS[HUBnumTable[HUBCode[HUBCodeOffs - 3]]].Hub->setAbsoluteMotorPosition(HUBCode[HUBCodeOffs - 2], 100, var2, 100, BrakingStyle::HOLD);
         break;
     }
     case 0x05: // Set Motor encoder position
     {
-        if (data[HUBCodeOffs] >= _numHubs)
+        if (HUBCode[HUBCodeOffs] >= _numHubs)
         {
             HUBCodeOffs--;
             return 1; // Invalid Hub number
         }
         HUBCodeOffs++;
         HUBCodeOffs++;
-        var2 = vars[data[HUBCodeOffs++]];
-        log_debug("Set Motor encoder at port: %i, to absolute position %f, hub: %i", data[HUBCodeOffs - 2], var2, HUBnumTable[data[HUBCodeOffs - 3]]);
-        HUBS[HUBnumTable[data[HUBCodeOffs - 3]]].Hub->setAbsoluteMotorEncoderPosition(data[HUBCodeOffs - 2], var2);
+        var2 = vars[HUBCode[HUBCodeOffs++]];
+        log_debug("Set Motor encoder at port: %i, to absolute position %f, hub: %i", HUBCode[HUBCodeOffs - 2], var2, HUBnumTable[HUBCode[HUBCodeOffs - 3]]);
+        HUBS[HUBnumTable[HUBCode[HUBCodeOffs - 3]]].Hub->setAbsoluteMotorEncoderPosition(HUBCode[HUBCodeOffs - 2], var2);
         break;
     }
     case 0x06: // Jump to specified location
     {
-        var = *((uint8_t *)&data[HUBCodeOffs]);
+        var = *((uint8_t *)&HUBCode[HUBCodeOffs]);
         HUBCodeOffs++;
         HUBCodeOffs = var;
         log_debug("jump to %i",var);
@@ -148,44 +148,44 @@ int LegoHubController::ControlHubs(int numberOfHubs)
     }
     case 0x07: // Set variable
     {
-        vars[data[HUBCodeOffs++]] = *((double *)&data[HUBCodeOffs]);
+        vars[HUBCode[HUBCodeOffs++]] = *((double *)&HUBCode[HUBCodeOffs]);
         HUBCodeOffs += 8;
         break;
     }
     case 0x08: // Multiply
     {
-        var2 = vars[data[HUBCodeOffs++]] * vars[data[HUBCodeOffs++]];
-        vars[data[HUBCodeOffs++]] = var2;
+        var2 = vars[HUBCode[HUBCodeOffs++]] * vars[HUBCode[HUBCodeOffs++]];
+        vars[HUBCode[HUBCodeOffs++]] = var2;
         break;
     }
     case 0x09: // Divide
     {
-        var2 = vars[data[HUBCodeOffs++]] / vars[data[HUBCodeOffs++]];
-        vars[data[HUBCodeOffs++]] = var2;
+        var2 = vars[HUBCode[HUBCodeOffs++]] / vars[HUBCode[HUBCodeOffs++]];
+        vars[HUBCode[HUBCodeOffs++]] = var2;
         break;
     }
     case 0x0a: // Add
     {
-        var2 = vars[data[HUBCodeOffs++]] + vars[data[HUBCodeOffs++]];
-        vars[data[HUBCodeOffs++]] = var2;
+        var2 = vars[HUBCode[HUBCodeOffs++]] + vars[HUBCode[HUBCodeOffs++]];
+        vars[HUBCode[HUBCodeOffs++]] = var2;
         break;
     }
     case 0x0b: // Subtract
     {
-        var2 = vars[data[HUBCodeOffs++]] - vars[data[HUBCodeOffs++]];
-        vars[data[HUBCodeOffs++]] = var2;
+        var2 = vars[HUBCode[HUBCodeOffs++]] - vars[HUBCode[HUBCodeOffs++]];
+        vars[HUBCode[HUBCodeOffs++]] = var2;
         break;
     }
     case 0x0c: // If
     {
-        log_debug("if: %i, adrress 1: %i, 2: %i",vars[data[HUBCodeOffs++]],*((uint16_t *)&data[HUBCodeOffs + 1]),*((uint16_t *)&data[HUBCodeOffs + 3]));
-        if (vars[data[HUBCodeOffs++]] != (int)0)
+        log_debug("if: %i, adrress 1: %i, 2: %i",vars[HUBCode[HUBCodeOffs++]],*((uint16_t *)&HUBCode[HUBCodeOffs + 1]),*((uint16_t *)&HUBCode[HUBCodeOffs + 3]));
+        if (vars[HUBCode[HUBCodeOffs++]] != (int)0)
         {
-            var = *((uint16_t *)&data[HUBCodeOffs++]);
+            var = *((uint16_t *)&HUBCode[HUBCodeOffs++]);
             else_locations[num_if] = var;
             HUBCodeOffs = var;
             HUBCodeOffs++;
-            var = *((uint16_t *)&data[HUBCodeOffs++]);
+            var = *((uint16_t *)&HUBCode[HUBCodeOffs++]);
             else_end_locations[num_if] = var;
             HUBCodeOffs++;
             num_if++;
@@ -198,15 +198,15 @@ int LegoHubController::ControlHubs(int numberOfHubs)
     }
     case 0x0d: // Boolean operations
     {
-        if (vars[data[HUBCodeOffs++]])
+        if (vars[HUBCode[HUBCodeOffs++]])
         {
             b1 = true;
         }
-        if (vars[data[HUBCodeOffs++]])
+        if (vars[HUBCode[HUBCodeOffs++]])
         {
             b2 = true;
         }
-        switch (data[HUBCodeOffs++])
+        switch (HUBCode[HUBCodeOffs++])
         {
         case 0: // equals
         {
@@ -261,19 +261,19 @@ int LegoHubController::ControlHubs(int numberOfHubs)
         }
         if (b3)
         {
-            vars[data[HUBCodeOffs++]] = 1.0f;
+            vars[HUBCode[HUBCodeOffs++]] = 1.0f;
         }
         else
         {
-            vars[data[HUBCodeOffs++]] = 0.0f;
+            vars[HUBCode[HUBCodeOffs++]] = 0.0f;
         }
         break;
     }
     case 0x0e: // Math
     {
-        var1 = vars[data[HUBCodeOffs++]];
+        var1 = vars[HUBCode[HUBCodeOffs++]];
 
-        switch (data[HUBCodeOffs++])
+        switch (HUBCode[HUBCodeOffs++])
         {
         case 0: // round
         {
@@ -353,42 +353,42 @@ int LegoHubController::ControlHubs(int numberOfHubs)
         default:
             return 1;
         }
-        vars[data[HUBCodeOffs++]] = var2;
+        vars[HUBCode[HUBCodeOffs++]] = var2;
         break;
     }
     case 0x0f:
     {
-        ivar1 = vars[data[HUBCodeOffs++]];
-        ivar2 = vars[data[HUBCodeOffs++]];
-        vars[data[HUBCodeOffs++]] = ivar1 % ivar2;
+        ivar1 = vars[HUBCode[HUBCodeOffs++]];
+        ivar2 = vars[HUBCode[HUBCodeOffs++]];
+        vars[HUBCode[HUBCodeOffs++]] = ivar1 % ivar2;
         break;
     }
     case 0x10: // Turn on Motor with speed
     {
         HUBCodeOffs++;
         HUBCodeOffs++;
-        var2 = (int)map(vars[data[HUBCodeOffs++]], 0, 255, -100, 100);
-        log_debug("Starting Motor at port: %s, speed: %f, channel: %i", data[HUBCodeOffs - 2] ? "blue" : "red", var2, data[HUBCodeOffs - 3]);
-        PFHUB.single_pwm((PowerFunctionsPort)data[HUBCodeOffs - 2], PFHUB.speedToPwm(var2), data[HUBCodeOffs - 3]);
+        var2 = (int)map(vars[HUBCode[HUBCodeOffs++]], 0, 255, -100, 100);
+        log_debug("Starting Motor at port: %s, speed: %f, channel: %i", HUBCode[HUBCodeOffs - 2] ? "blue" : "red", var2, HUBCode[HUBCodeOffs - 3]);
+        PFHUB.single_pwm((PowerFunctionsPort)HUBCode[HUBCodeOffs - 2], PFHUB.speedToPwm(var2), HUBCode[HUBCodeOffs - 3]);
         break;
     }
     case 0x11: // Increment motor speed
     {
         HUBCodeOffs += 2;
-        log_debug("Increment Motor speed at port: %s, channel: %i", data[HUBCodeOffs - 1] ? "blue" : "red", data[HUBCodeOffs - 2]);
-        PFHUB.single_increment((PowerFunctionsPort)data[HUBCodeOffs - 1], data[HUBCodeOffs - 2]);
+        log_debug("Increment Motor speed at port: %s, channel: %i", HUBCode[HUBCodeOffs - 1] ? "blue" : "red", HUBCode[HUBCodeOffs - 2]);
+        PFHUB.single_increment((PowerFunctionsPort)HUBCode[HUBCodeOffs - 1], HUBCode[HUBCodeOffs - 2]);
         break;
     }
     case 0x12: // Decremnet motor speed
     {
         HUBCodeOffs += 2;
-        log_debug("Decrement Motor speed at port: %s, channel: %i", data[HUBCodeOffs - 1] ? "blue" : "red", data[HUBCodeOffs - 2]);
-        PFHUB.single_decrement((PowerFunctionsPort)data[HUBCodeOffs - 1], data[HUBCodeOffs - 2]);
+        log_debug("Decrement Motor speed at port: %s, channel: %i", HUBCode[HUBCodeOffs - 1] ? "blue" : "red", HUBCode[HUBCodeOffs - 2]);
+        PFHUB.single_decrement((PowerFunctionsPort)HUBCode[HUBCodeOffs - 1], HUBCode[HUBCodeOffs - 2]);
         break;
     }
     default:
     {
-        log_e("Invlaid opcode %i", data[HUBCodeOffs - 1]);
+        log_e("Invlaid opcode %i", HUBCode[HUBCodeOffs - 1]);
         return 2;
     }
     }
