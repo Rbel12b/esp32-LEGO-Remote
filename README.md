@@ -34,7 +34,7 @@ It is possible to connect to up to 9 hubs in parallel with a common ESP32 board.
 
 Then close the Arduino environment and open it again to force the rebuild of the library. Open your sketch build and upload it and be happy with multiple connections.
 
-###### Note: 
+##### Note: 
 The project will only allow to connect 7 HUBs
 
 
