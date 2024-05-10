@@ -2,7 +2,7 @@
 
 *Disclaimer*: LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this project.
 
-**ESP32-LEGO-Remote** is a project for programming all kinds of *LEGO* Powered UP devices. From the two port hub, Move Hub (e.g. Boost), DUPLO train hub, Technic Hub. You can control almost everything with that library and your Arduino sketch. It uses the [Legoino](https://github.com/corneliusmunz/legoino) library to connect to the HUBs.
+**ESP32-LEGO-Remote** is a project for programming all kinds of *LEGO* Powered UP devices. From the two port hub, Move Hub (e.g. Boost), DUPLO train hub, Technic Hub.
 
 It is also possible to use the "old" Power Function IR Modules and control them via an IR LED connected to a PIN of your ESP32 device.
 
@@ -32,16 +32,15 @@ It is possible to connect to up to 9 hubs in parallel with a common ESP32 board.
 #define CONFIG_BT_NIMBLE_MAX_CONNECTIONS 3
 ```
 
-Then close the Arduino environment and open it again to force the rebuild of the library. Open your sketch build and upload it and be happy with multiple connections.
+Then restart the environment and open it again to force the rebuild of the library. Open your sketch build and upload it and be happy with multiple connections.
 
-###### Note: 
+##### Note: 
 The project will only allow to connect 7 HUBs
 
 
 # Debug Messages
 
-The standard `log_d`, `log_e`, `log_xx` messages are used. The log levels could be set via the Arduino environment and the messages are sent to the serial monitor.
-
+The standard `log_d`, `log_e`, `log_xx` messages are used. The log levels could be set via the platformIO environment and the messages are sent to the serial monitor.
 
 # Credits
 
@@ -52,7 +51,6 @@ Thanks to [@Cornelius Munz](https://github.com/corneliusmunz) for creating the [
 Prerequisite of that library is the NimBLE-Arduino library (https://github.com/h2zero/NimBLE-Arduino) with at least version 1.0.1. Otherwise it will not work.
 
 Up to now the library is only tested for Control+ Hubs and only set motor speeds.
-
 
 # ToDo
 * Add sensor support
