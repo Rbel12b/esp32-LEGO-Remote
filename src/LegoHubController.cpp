@@ -1,9 +1,9 @@
 #include <LegoHubController.h>
 
 LegoHubController::LegoHubController(int numHUBs)
-    : PFHUB(4)
+    : PFHUB(IR_PIN) // Set the IR pin
 {
-    if (numHUBs < 8)
+    if (numHUBs < 8) // cannot use more tha 7 hubs
     {
         _numHubs = numHUBs;
     }
@@ -15,23 +15,30 @@ LegoHubController::~LegoHubController()
 
 void LegoHubController::init()
 {
-    HUBS = new TechnicHUBConf[_numHubs];
+    // create the hub objects
+    HUBS = new TechnicHUB[_numHubs];
 
     HUBCodeOffs = 0;
     num_if = 0;
 }
+/**
+ * Initializes a HUB
+ * @param num the number of the hub to initialize.
+ * */
 void LegoHubController::initHub(int num)
 {
     HUBS[num].init();
 }
 /**
- * @param numberOfHubs the amount of hubs that is conneted.
+ * @param numberOfHubs the number of hubs whoose are conneted.
  * @returns An Integer, If it's a non-zero number then some errors occured
  * 1: Invalid HUB number
  * 2: invalid opcode
+ * 3: The HUB is disconnected
  * */
 int LegoHubController::ControlHubs(int numberOfHubs)
 {
+    // variable to do math
     int var = 0;
     double var1 = 0;
     double var2 = 0;
@@ -49,13 +56,16 @@ int LegoHubController::ControlHubs(int numberOfHubs)
     {
         if (HUBS[i].CheckHUB())
         {
-            return 0;
+            return 3;
         }
     }
+    // if we are inside an if statement
     if(num_if)
     {
+        // if we are at the else
         if(else_locations[num_if - 1] == HUBCodeOffs)
         {
+            // decrease the if depth an jump to the end of the else
             num_if--;
             HUBCodeOffs = else_end_locations[num_if];
             log_debug("skip else: s=%i, e=%i, if statements",else_locations[num_if],else_end_locations[num_if], num_if);
@@ -78,8 +88,8 @@ int LegoHubController::ControlHubs(int numberOfHubs)
         HUBCodeOffs++;
         HUBCodeOffs++;
         var2 = vars[HUBCode[HUBCodeOffs++]];
-        log_debug("Turn Motor at port: %i, by %f degrees, hub: %i", HUBCode[HUBCodeOffs - 2], var2, HUBnumTable[HUBCode[HUBCodeOffs - 3]]);
-        HUBS[HUBnumTable[HUBCode[HUBCodeOffs - 3]]].Hub->setTachoMotorSpeedForDegrees(HUBCode[HUBCodeOffs - 2], 100, var2, 100, BrakingStyle::HOLD);
+        log_debug("Turn Motor at port: %i, by %f degrees, hub: %i", HUBCode[HUBCodeOffs - 2], var2, HUBCode[HUBCodeOffs - 3]);
+        HUBS[HUBCode[HUBCodeOffs - 3]].Hub->setTachoMotorSpeedForDegrees(HUBCode[HUBCodeOffs - 2], 100, var2, 100, BrakingStyle::HOLD);
         break;
     }
     case 0x02: // Turn on Motor with speed
@@ -92,8 +102,8 @@ int LegoHubController::ControlHubs(int numberOfHubs)
         HUBCodeOffs++;
         HUBCodeOffs++;
         var2 = vars[HUBCode[HUBCodeOffs++]];
-        log_debug("Starting Motor at port: %i, speed: %f, hub: %i", HUBCode[HUBCodeOffs - 2], var2, HUBnumTable[HUBCode[HUBCodeOffs - 3]]);
-        HUBS[HUBnumTable[HUBCode[HUBCodeOffs - 3]]].Hub->setTachoMotorSpeed(HUBCode[HUBCodeOffs - 2], var2, 100, BrakingStyle::HOLD);
+        log_debug("Starting Motor at port: %i, speed: %f, hub: %i", HUBCode[HUBCodeOffs - 2], var2, HUBCode[HUBCodeOffs - 3]);
+        HUBS[HUBCode[HUBCodeOffs - 3]].Hub->setTachoMotorSpeed(HUBCode[HUBCodeOffs - 2], var2, 100, BrakingStyle::HOLD);
         break;
     }
     case 0x03: // Turn on Motor for milliseconds
@@ -106,8 +116,8 @@ int LegoHubController::ControlHubs(int numberOfHubs)
         HUBCodeOffs++;
         HUBCodeOffs++;
         var2 = vars[HUBCode[HUBCodeOffs++]];
-        log_debug("Turn Motor at port: %i, for %f seconds, hub: %i", HUBCode[HUBCodeOffs - 2], var2 / 1000, HUBnumTable[HUBCode[HUBCodeOffs - 3]]);
-        HUBS[HUBnumTable[HUBCode[HUBCodeOffs - 3]]].Hub->setTachoMotorSpeedForTime(HUBCode[HUBCodeOffs - 2], 100, var2, 100, BrakingStyle::HOLD);
+        log_debug("Turn Motor at port: %i, for %f seconds, hub: %i", HUBCode[HUBCodeOffs - 2], var2 / 1000, HUBCode[HUBCodeOffs - 3]);
+        HUBS[HUBCode[HUBCodeOffs - 3]].Hub->setTachoMotorSpeedForTime(HUBCode[HUBCodeOffs - 2], 100, var2, 100, BrakingStyle::HOLD);
         break;
     }
     case 0x04: // Turn Motor to absolute position
@@ -120,8 +130,8 @@ int LegoHubController::ControlHubs(int numberOfHubs)
         HUBCodeOffs++;
         HUBCodeOffs++;
         var2 = vars[HUBCode[HUBCodeOffs++]];
-        log_debug("Turn Motor at port: %i, to absolute position %f, hub: %i", HUBCode[HUBCodeOffs - 2], var2, HUBnumTable[HUBCode[HUBCodeOffs - 3]]);
-        HUBS[HUBnumTable[HUBCode[HUBCodeOffs - 3]]].Hub->setAbsoluteMotorPosition(HUBCode[HUBCodeOffs - 2], 100, var2, 100, BrakingStyle::HOLD);
+        log_debug("Turn Motor at port: %i, to absolute position %f, hub: %i", HUBCode[HUBCodeOffs - 2], var2, HUBCode[HUBCodeOffs - 3]);
+        HUBS[HUBCode[HUBCodeOffs - 3]].Hub->setAbsoluteMotorPosition(HUBCode[HUBCodeOffs - 2], 100, var2, 100, BrakingStyle::HOLD);
         break;
     }
     case 0x05: // Set Motor encoder position
@@ -134,8 +144,8 @@ int LegoHubController::ControlHubs(int numberOfHubs)
         HUBCodeOffs++;
         HUBCodeOffs++;
         var2 = vars[HUBCode[HUBCodeOffs++]];
-        log_debug("Set Motor encoder at port: %i, to absolute position %f, hub: %i", HUBCode[HUBCodeOffs - 2], var2, HUBnumTable[HUBCode[HUBCodeOffs - 3]]);
-        HUBS[HUBnumTable[HUBCode[HUBCodeOffs - 3]]].Hub->setAbsoluteMotorEncoderPosition(HUBCode[HUBCodeOffs - 2], var2);
+        log_debug("Set Motor encoder at port: %i, to absolute position %f, hub: %i", HUBCode[HUBCodeOffs - 2], var2, HUBCode[HUBCodeOffs - 3]);
+        HUBS[HUBCode[HUBCodeOffs - 3]].Hub->setAbsoluteMotorEncoderPosition(HUBCode[HUBCodeOffs - 2], var2);
         break;
     }
     case 0x06: // Jump to specified location
@@ -183,7 +193,6 @@ int LegoHubController::ControlHubs(int numberOfHubs)
         {
             var = *((uint16_t *)&HUBCode[HUBCodeOffs++]);
             else_locations[num_if] = var;
-            HUBCodeOffs = var;
             HUBCodeOffs++;
             var = *((uint16_t *)&HUBCode[HUBCodeOffs++]);
             else_end_locations[num_if] = var;
@@ -192,7 +201,8 @@ int LegoHubController::ControlHubs(int numberOfHubs)
         }
         else
         {
-            HUBCodeOffs += 4;
+            var = *((uint16_t *)&HUBCode[HUBCodeOffs++]);
+            HUBCodeOffs = var;
         }
         break;
     }
@@ -356,7 +366,7 @@ int LegoHubController::ControlHubs(int numberOfHubs)
         vars[HUBCode[HUBCodeOffs++]] = var2;
         break;
     }
-    case 0x0f:
+    case 0x0f: // mod
     {
         ivar1 = vars[HUBCode[HUBCodeOffs++]];
         ivar2 = vars[HUBCode[HUBCodeOffs++]];
@@ -394,7 +404,12 @@ int LegoHubController::ControlHubs(int numberOfHubs)
     }
     return 0;
 }
-
+/**
+ * connect to a hub
+ * @param num the hub number
+ * @returns 1 - if it succseeds
+ * @returns 2 - if it fails
+*/
 int LegoHubController::ConnectToAHub(int num)
 {
     if (HUBS[num].CheckHUB())
@@ -404,26 +419,18 @@ int LegoHubController::ConnectToAHub(int num)
     HUBS[num].Hub->setLedRGBColor(0, 255, 0);
     return 1;
 }
-NimBLEAddress LegoHubController::getAddressOfConnectedHub(int num)
-{
-    Serial.println(HUBS[num].Hub->getHubAddress());
-    return HUBS[num].Hub->getHubAddress();
-}
-void LegoHubController::setAddressOfHubByNum(int numHub, NimBLEAddress Address)
-{
-    HUBS->Hub->shutDownHub();
-    // HUBS[numHub].SetAddress(Address);
-    HUBS[numHub].init(false);
-}
 
-TechnicHUBConf::TechnicHUBConf()
+TechnicHUB::TechnicHUB()
 {
 }
-TechnicHUBConf::~TechnicHUBConf()
+TechnicHUB::~TechnicHUB()
 {
     delete Hub;
 }
-void TechnicHUBConf::init(bool withAddress)
+/**
+ * initializes the HUB(start advertising)
+*/
+void TechnicHUB::init(bool withAddress)
 {
     Hub = new Lpf2Hub;
     if (withAddress)
@@ -433,7 +440,11 @@ void TechnicHUBConf::init(bool withAddress)
     }
     Hub->init();
 }
-int TechnicHUBConf::CheckHUB()
+/**
+ * checks the HUB if it isn't connected tryes to connect
+ * @returns 1 - if fail
+*/
+int TechnicHUB::CheckHUB()
 {
     // connect flow. Search for BLE services and try to connect if the uuid of the hub is found
     if (Hub->isConnecting())
@@ -457,11 +468,19 @@ int TechnicHUBConf::CheckHUB()
     }
     return 1;
 }
-int TechnicHUBConf::Connect()
+/**
+ * connects to the HUB
+ * @returns 1 - if fail
+*/
+int TechnicHUB::Connect()
 {
     return CheckHUB();
 }
-void TechnicHUBConf::SetAddress(NimBLEAddress NewAddress)
+/**
+ * sets the MAC address of that hub, what you want to connect to
+ * @param NewAddress the new MAC address
+*/
+void TechnicHUB::SetAddress(NimBLEAddress NewAddress)
 {
     Address = NewAddress.toString();
 }

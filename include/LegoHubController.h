@@ -6,7 +6,7 @@
 #include "PowerFunctions.h"
  
 #define DEBUGLOG
-
+// define logging
 #ifdef DEBUGLOG
 #define log_debug(format, ...) log_printf(ARDUHAL_LOG_FORMAT(D, format), ##__VA_ARGS__)
 #else
@@ -19,11 +19,12 @@ typedef uint8_t byte;
 #endif
 
 #define MAX_PROG_MEM 1024
+#define IR_PIN 4 // the pin where the IR led is connected to
 
-struct TechnicHUBConf // Configuration for a Lego Technic HUB
+struct TechnicHUB // Object for maintaining a Lego Technic HUB
 {
-    TechnicHUBConf();
-    ~TechnicHUBConf();
+    TechnicHUB();
+    ~TechnicHUB();
 
     void init(bool withAddress = false);
     int CheckHUB();
@@ -42,22 +43,29 @@ struct LegoHubController // An instance for Controlling Lego HUBS
     void init();
     void initHub(int num);
     int ConnectToAHub(int num);
-    NimBLEAddress getAddressOfConnectedHub(int num);
-    void setAddressOfHubByNum(int numHub, NimBLEAddress Address);
     int ControlHubs(int numberOfHubs);
 
-    TechnicHUBConf *HUBS;
-    byte HUBnumTable[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+    // The hubs
+    TechnicHUB *HUBS;
+    // Variables what the program can use
     double vars[256];
+    // External data from the Remote
     int RemoteData[64];
-    byte HUBCode[MAX_PROG_MEM] = {0x02, 0, 1, 3, 0x02, 0, 0, 2, 0x06, 0, 0, 0x00, 0, 0, 0, 0, 0, 0};
+    // The Code
+    byte HUBCode[MAX_PROG_MEM] = {0};
+    // By default it doesn't do anything
 
 private:
+    // the number of hubs
     int _numHubs = 1;
+    // the offset in the HUbCode
     int HUBCodeOffs = 0;
+    // an object for controlling PF with IR
     PowerFunctions PFHUB;
-    uint8_t else_end_locations[6];
-    uint8_t else_locations[6];
+    // arrays to store jump locations
+    uint8_t else_end_locations[10];
+    uint8_t else_locations[10];
+    // variable to maintain how many addresses are int the arrays
     int num_if = 0;
     /*
     the value of the HUBCode variable is a binary code, what contains opcodes.
