@@ -4,6 +4,12 @@
 #include "mbedtls/base64.h"
 #include "soc/soc.h"
 #include "soc/rtc_cntl_reg.h"
+#include <WiFi.h>
+#include <ESPAsyncWebServer.h>
+#include "Secrets.h"
+#include "FS.h"
+#include "SPIFFS.h"
+AsyncWebServer server(80);
 #define RXD2 16 // hardware serial receive pin
 #define TXD2 17 // hardware serial trnsmit pin
 
@@ -65,6 +71,7 @@ unsigned int input_pos = 0;      // how many bytes did we receive
 char Base64Data[MAX_LENGHT + 1]; // stores the base64 encoded data
 Data_Package data;               // struct for storing the data received from the serial port
 Data_Package prevData;           // struct for storing the previous data received from the serial port
+size_t Code_Len;                 // Leght of the program (Connroller.HUBCode)
 
 byte programHubCount = 0; // how many hubs are used in a program, max 7
 
@@ -79,13 +86,70 @@ void setup()
     // initialize the serial connections to 115200 baud
     Serial.begin(115200);
     Serial2.begin(115200, SERIAL_8N1, RXD2, TXD2);
+    SPIFFS.begin();
+    // Connect to Wi-Fi
+    WiFi.begin(ssid, password);
+    while (WiFi.status() != WL_CONNECTED)
+    {
+        delay(1000);
+        Serial.println("Connecting to WiFi...");
+    }
+    Serial.println("Connected to WiFi");
+    // Print the ESP32's IP address
+    Serial.print("ESP32 Web Server's IP address: ");
+    Serial.println(WiFi.localIP());
+
+    server.on(
+        "/Code",
+        HTTP_POST,
+        [](AsyncWebServerRequest *request)
+        {
+            request->send(201, "text/plain", "OK");
+        },
+        NULL,
+        [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total)
+        {
+            Code_Len = 0;
+            for (Code_Len = 0; Code_Len < len; Code_Len++)
+            {
+                if (Code_Len == MAX_PROG_MEM)
+                {
+                    break;
+                }
+                Controller.HUBCode[Code_Len] = data[Code_Len];
+            }
+            if (Code_Len > MAX_PROG_MEM)
+            {
+                Code_Len = MAX_PROG_MEM;
+            }
+            Controller.HUBCode[MAX_PROG_MEM] = 0;
+            request->send(200, "text/plain", "OK");
+        });
+    server.on(
+        "/Code",
+        HTTP_GET,
+        [](AsyncWebServerRequest *request)
+        {
+            request->send(201, "text/plain", (char*)Controller.HUBCode);
+        });
+    server.on(
+        "/",
+        HTTP_GET,
+        [](AsyncWebServerRequest *request)
+        {
+            request->send(SPIFFS, "/index.html");
+        });
+    server.serveStatic("/", SPIFFS, "/", "max-age=1800");
+    // Start the server
+    server.begin();
     // initialize the controller
     Controller.init();
-    if(programHubCount > 7)
+    if (programHubCount > 7)
     {
         // if the number iof hubs is too large stop.
         log_e("Too many hubs: %i", programHubCount);
-        while(1);
+        while (1)
+            ;
     }
     // connect to {programHubCount} hubs
     for (int i = 0; i < programHubCount; i++)
@@ -110,9 +174,10 @@ void setup()
 void loop()
 {
     // conntrol the HUBs and check the return variable
-    switch(Controller.ControlHubs(programHubCount)){
+    switch (Controller.ControlHubs(programHubCount))
+    {
     case 1:
-        log_e("invalid HUB number");        
+        log_e("invalid HUB number");
         break;
     case 0:
         // everything is fine
@@ -200,8 +265,8 @@ void process_data(const char *ReceivedData)
     strncpy(Base64Data, &ReceivedData[1], MAX_LENGHT);
     // add the ending zero to the string
     Base64Data[lenght] = '\0';
-    size_t outlen; //for storing the lenght of the data
-    mbedtls_base64_decode((unsigned char*)(*(&data.LjoyX)), sizeof(Data_Package), &outlen, (const unsigned char *)Base64Data, lenght);
+    size_t outlen; // for storing the lenght of the data
+    mbedtls_base64_decode((unsigned char *)(*(&data.LjoyX)), sizeof(Data_Package), &outlen, (const unsigned char *)Base64Data, lenght);
 } // end of process_data
 
 /**
@@ -240,7 +305,7 @@ void processIncomingByte(const byte inByte)
 /**
  * check if we had received data over the serial connection and process the received data
  * @returns void
-*/
+ */
 void updateConntroller()
 {
     while (Serial2.available() > 0)
@@ -251,7 +316,7 @@ void updateConntroller()
 }
 /**
  * @returns void
-*/
+ */
 bool buttonpressed(int button)
 {
     if ((*((&data.Button1) + button)) && !(*((&prevData.Button1) + button)))

@@ -52,7 +52,7 @@ struct LegoHubController // An instance for Controlling Lego HUBS
     // External data from the Remote
     int RemoteData[64];
     // The Code
-    byte HUBCode[MAX_PROG_MEM] = {0};
+    byte HUBCode[MAX_PROG_MEM + 2] = {0};
     // By default it doesn't do anything
 
 private:
