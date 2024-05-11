@@ -51,8 +51,14 @@ div.Editor {
     height: 36px;
     margin: 2px;
     padding: 8px;
-    cursor: move;
     position: absolute;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.MoveBlock {
+    cursor: move;
 }
 
 .ListBlock {
@@ -65,13 +71,13 @@ div.Editor {
 .argInput {
     border-width: 1px;
     border-radius: 8px;
-    width: 50px;
+    width: fit-content;
     font-size: 26px;
     border-style: solid;
 }
 
 .custom-select {
-    width: min-content;
+    min-width: 50px;
 }
 
 select {
@@ -79,9 +85,9 @@ select {
     /* safari */
     -webkit-appearance: none;
     /* other styles for aesthetics */
-    width: 100%;
-    font-size: 1.15rem;
-    padding: 0.675em 6em 0.675em 1em;
+    width: fit-content;
+    font-size: 26px;
+    padding: 2px;
     background-color: #fff;
     border: 1px solid #caced1;
     border-radius: 0.25rem;

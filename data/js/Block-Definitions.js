@@ -2,72 +2,72 @@ var NUM_BLOCKS = 19;
 function getBlockHtml(index, Code) {
     switch (Code[index]) {
         case 1:
-            return "Turn Motor by \
+            return "<div class=\"MoveBlock\">Turn Motor by </div>\
             <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\"> \
             degrees, Hub: \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" max=\"7\">, \
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"7\">, \
             Port: \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 3) + "_Arg\" value=\"" + Code[index + 3] + "\" onchange=\"ArgChange(this)\" max=\"5\">";
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 3) + "_Arg\" value=\"" + Code[index + 3] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"5\">";
         case 2:
-            return "Set Motor speed to \
+            return "<div class=\"MoveBlock\">Set Motor speed to </div>\
             <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\">\
             %, HUB: \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" max=\"7\">\
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"7\">\
             , Port: \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 3) + "_Arg\" value=\"" + Code[index + 3] + "\" onchange=\"ArgChange(this)\" max=\"5\">";
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 3) + "_Arg\" value=\"" + Code[index + 3] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"5\">";
         case 3:
-            return "Run Motor for \
+            return "<div class=\"MoveBlock\">Run Motor for </div>\
             <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\">\
             milliseconds, HUB: \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" max=\"7\">\
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"7\">\
             , Port: \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 3) + "_Arg\" value=\"" + Code[index + 3] + "\" onchange=\"ArgChange(this)\" max=\"5\">";
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 3) + "_Arg\" value=\"" + Code[index + 3] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"5\">";
         case 4:
-            return "Turn Motor to absolute posision \
+            return "<div class=\"MoveBlock\">Turn Motor to absolute posision </div>\
             <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\">\
             °, HUB: \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" max=\"7\">\
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"7\">\
             , Port: \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 3) + "_Arg\" value=\"" + Code[index + 3] + "\" onchange=\"ArgChange(this)\" max=\"5\">";
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 3) + "_Arg\" value=\"" + Code[index + 3] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"5\">";
         case 5:
-            return "Set Motor encoder to \
+            return "<div class=\"MoveBlock\">Set Motor encoder to </div>\
             <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\">\
             °, HUB: \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" max=\"7\">\
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"7\">\
             , Port: \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 3) + "_Arg\" value=\"" + Code[index + 3] + "\" onchange=\"ArgChange(this)\" max=\"5\">";
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 3) + "_Arg\" value=\"" + Code[index + 3] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"5\">";
         case 7:
-            return "var \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" max=\"255\">\
+            return "<div class=\"MoveBlock\">var </div>\
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"255\">\
             equals to \
             ";
         case 8:
-            return "var \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" max=\"255\">\
+            return "<div class=\"MoveBlock\">var </div>\
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"255\">\
             * var \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" max=\"255\">";
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"255\">";
         case 9:
-            return "var \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" max=\"255\">\
+            return "<div class=\"MoveBlock\">var </div>\
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"255\">\
             / var \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" max=\"255\">";
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"255\">";
         case 10:
-            return "var \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" max=\"255\">\
+            return "<div class=\"MoveBlock\">var </div>\
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"255\">\
             + var \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" max=\"255\">";
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"255\">";
         case 11:
-            return "var \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" max=\"255\">\
+            return "<div class=\"MoveBlock\">var </div>\
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"255\">\
             - var \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" max=\"255\">";
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"255\">";
         case 12:
-            return "If \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" max=\"255\">";
+            return "<div class=\"MoveBlock\">If var </div>\
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"255\">";
         case 13:
-            return "var \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" max=\"255\">\
-            <div class=\"custom-select\"><select value=\"" + Code[index + 2] + "\" name=\"bool\" id=\"bool_" + (index + 2) + "\" onchange=\"selectArgChange(this)\">\
+            return "<div class=\"MoveBlock\">var </div>\
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"255\">\
+            <div class=\"custom-select\" name=\"bool\"><select id=\"bool_" + (index + 2) + "\" value=\"" + Code[index + 2] + "\" onchange=\"selectArgChange(this)\">\
                 <option value=\"0\">equals</option>\
                 <option value=\"1\">greater than</option>\
                 <option value=\"2\">less than</option>\
@@ -76,9 +76,9 @@ function getBlockHtml(index, Code) {
                 <option value=\"5\">not</option>\
             </select></div> \
             var \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 3) + "_Arg\" value=\"" + Code[index + 3] + "\" onchange=\"ArgChange(this)\" max=\"255\">";
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 3) + "_Arg\" value=\"" + Code[index + 3] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"255\">";
         case 14:
-            return "<div class=\"custom-select\" style=\"width: max-content\"><select value=\"" + Code[index + 1] + "\" name=\"math\" id=\"math_" + (index + 1) + "\" onchange=\"selectArgChange(this)\">\
+            return "<span class=\"custom-select\" name=\"math\"><select id=\"math_" + (index + 1) + "\" value=\"" + Code[index + 1] + "\" onchange=\"selectArgChange(this)\">\
                 <option value=\"0\">round</option>\
                 <option value=\"1\">abs</option>\
                 <option value=\"2\">sqrt</option>\
@@ -94,35 +94,35 @@ function getBlockHtml(index, Code) {
                 <option value=\"12\">atan</option>\
                 <option value=\"13\">floor</option>\
                 <option value=\"14\">ceiling</option>\
-            </select></div>\
-            (var \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" max=\"255\">\
+            </select></span>\
+            <div class=\"MoveBlock\">(var </div>\
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"255\">\
             )";
         case 15:
-            return "var\
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" max=\"255\">\
+            return "<div class=\"MoveBlock\">var</div>\
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"255\">\
             Mod var \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" max=\"255\">";
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"255\">";
         case 16:
-            return "Set Motor PWM to \
+            return "<div class=\"MoveBlock\">Set Motor PWM to </div>\
             <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\">\
             , Channel: \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" max=\"3\">\
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"3\">\
             , Port: \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 3) + "_Arg\" value=\"" + Code[index + 3] + "\" onchange=\"ArgChange(this)\" max=\"1\">";
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 3) + "_Arg\" value=\"" + Code[index + 3] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"1\">";
         case 17:
-            return "Increment, Channel: \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" max=\"3\">\
+            return "<div class=\"MoveBlock\">Increment, Channel: </div>\
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"3\">\
             , Port: \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" max=\"1\">";
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"1\">";
         case 18:
-            return "Decrement, Channel: \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" max=\"3\">\
+            return "<div class=\"MoveBlock\">Decrement, Channel: </div>\
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"3\">\
             , Port: \
-            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" max=\"1\">";
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 2) + "_Arg\" value=\"" + Code[index + 2] + "\" onchange=\"ArgChange(this)\" min=\"0\" max=\"1\">";
         case 19:
-            return "var \
-            ";
+            return "<div class=\"MoveBlock\">var </div>\
+            <input type=\"number\" class=\"argInput\" id=\"" + (index + 1) + "_Arg\" value=\"" + Code[index + 1] + "\" onchange=\"ArgChange(this)\" min=\"0\" min=\"0\" max=\"255\">";
         default:
             return "Unknown"
     }
@@ -139,7 +139,7 @@ const BLOCK_NAME = [
     "var 0 / var 0",
     "var 0 + var 0",
     "var 0 - var 0",
-    "If 0",
+    "If var 0",
     "var 0 equals? var 0",
     "round(var 0)",
     "var0 Mod var 0",

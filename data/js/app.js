@@ -34,14 +34,14 @@ var CodeLenght = 0;
 function SetupBlocks() {
     var html = "";
     for (var i = 0; i < NUM_BLOCKS; i++) {
-        if(BLOCK_NAME[i] == ""){
+        if (BLOCK_NAME[i] == "") {
             continue;
         }
         html += ("<button name=\"" + (i + 1) + "\" class=\"CodeBlock ListBlock\" onclick=\"AddBlock(this)\">" + BLOCK_NAME[i] + "</button><br>");
     }
     document.getElementById("BlockList").innerHTML = html;
     for (var i = 0; i < NUM_BLOCKS; i++) {
-        if(BLOCK_NAME[i] == ""){
+        if (BLOCK_NAME[i] == "") {
             continue;
         }
         document.getElementsByName(i + 1)[0].style.backgroundColor = BLOCK_COLOR[i + 1];
@@ -76,7 +76,7 @@ function updateCode() {
         i += len;
         if (i == CodeLenght - 1) {
             element.style.backgroundColor = BLOCK_COLOR[Code[(i - len)]]
-            dragElement(element);
+            element.style.color = BLOCK_TEXT_COLOR[Code[(i - len)]]
         }
     }
 }
@@ -84,13 +84,20 @@ function ArgChange(BlockArg) {
     let val = BlockArg.value;
     let arg = BlockArg.id.slice(0, -4); // sclie off "_Arg" of the end
     Code[arg] = Number(val);
+    return true;
 }
-
+function selectArgChange(BlockArg) {
+    let val = BlockArg.value;
+    let arg = BlockArg.id.slice(5, 10); // sclie off "math_" of the start
+    Code[arg] = Number(val);
+    console.log(arg);
+    return true;
+}
 function dragElement(elmnt) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
     /* otherwise, move the DIV from anywhere inside the DIV:*/
-    elmnt.onmousedown = dragMouseDown;
+    elmnt.getElementsByTagName("div")[0].onmousedown = dragMouseDown;
 
     function dragMouseDown(e) {
         //e = e || window.event;
@@ -102,7 +109,7 @@ function dragElement(elmnt) {
         top = top.slice(0, -2);
         pos1 = e.clientX - left;
         pos2 = e.clientY - top;
-        document.onmouseup = closeDragElement;
+        document.getElementById("Code").onmouseup = closeDragElement;
         // call a function whenever the cursor moves:
         document.getElementById("Code").onmousemove = elementDrag;
     }
@@ -120,7 +127,7 @@ function dragElement(elmnt) {
 
     function closeDragElement() {
         /* stop moving when mouse button is released:*/
-        document.onmouseup = null;
+        document.getElementById("Code").onmouseup = null;
         document.getElementById("Code").onmousemove = null;
     }
 }
