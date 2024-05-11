@@ -7,14 +7,15 @@ function submitCode() {
             console.log(`Error: ${xhr.status}`);
         }
     };
-    xhr.send(Code);
+    xhr.send(CopileCode(Code));
 }
 function loadCode() {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "/editor");
     xhr.onload = () => {
         if (xhr.readyState == 4 && xhr.status == 201) {
-            Code = xhr.response;
+            Code = GetCode(xhr.response);
+            CodeLenght = GetCodelLength(xhr.response);
         } else {
             console.log(`Error: ${xhr.status}`);
         }
@@ -24,41 +25,65 @@ function loadCode() {
 function setup() {
     loadCode();
     SetupBlocks();
-    dragElement(document.getElementById("Block"));
+    Code.pop();
+    document.getElementById("Code").innerHTML = "";
 }
-var Code = "";
-var NUM_BLOCKS = 2;
-const BLOCK_NAME = [
-    "Motor Speed: 0",
-    "Turn motor 0°"
-]
-const BLOCK_LEN = [
-    3,
-    3
-]
+const Code = [0];
+var CodeLenght = 0;
+
 function SetupBlocks() {
     var html = "";
     for (var i = 0; i < NUM_BLOCKS; i++) {
-        html += ("<button name=\"" + (i + 1) + "\" class=\"Block_List\" onclick=\"AddBlock(this)\">" + BLOCK_NAME[i] + "</button><br>");
+        if(BLOCK_NAME[i] == ""){
+            continue;
+        }
+        html += ("<button name=\"" + (i + 1) + "\" class=\"CodeBlock ListBlock\" onclick=\"AddBlock(this)\">" + BLOCK_NAME[i] + "</button><br>");
     }
     document.getElementById("BlockList").innerHTML = html;
     for (var i = 0; i < NUM_BLOCKS; i++) {
-        //Make the DIV element draggagle:
-        //dragElement(document.getElementsByName("" + (i + 1))[0]);
+        if(BLOCK_NAME[i] == ""){
+            continue;
+        }
+        document.getElementsByName(i + 1)[0].style.backgroundColor = BLOCK_COLOR[i + 1];
+        document.getElementsByName(i + 1)[0].style.color = BLOCK_TEXT_COLOR[i + 1];
     }
 }
 function AddBlock(block) {
     var newBlock = block.name;
     var blockNum = Number(newBlock)
-    Code += blockNum;
-    for (var i = 0; i < BLOCK_LEN[blockNum]; i++) {
-        Code += '\0';
+    Code.push(blockNum);
+    for (let i = 0; i < BLOCK_LEN[blockNum]; i++) {
+        Code.push(0);
+        CodeLenght += 1;
     }
-    console.log(blockNum);
+    CodeLenght += 1;
     updateCode();
 }
 function updateCode() {
-
+    var html = "";
+    for (let i = 0; i < CodeLenght; i++) {
+        let len = BLOCK_LEN[Code[i]]
+        i += len;
+        if (i == CodeLenght - 1) {
+            html += ("<div  class=\"CodeBlock\" id=\"" + (i - len) + "_Block\">" + getBlockHtml(i - len, Code) + "</div><br>");
+        }
+    }
+    document.getElementById("Code").innerHTML += html;
+    for (let i = 0; i < CodeLenght; i++) {
+        let element = document.getElementById(i + "_Block");
+        dragElement(element);
+        let len = BLOCK_LEN[Code[i]]
+        i += len;
+        if (i == CodeLenght - 1) {
+            element.style.backgroundColor = BLOCK_COLOR[Code[(i - len)]]
+            dragElement(element);
+        }
+    }
+}
+function ArgChange(BlockArg) {
+    let val = BlockArg.value;
+    let arg = BlockArg.id.slice(0, -4); // sclie off "_Arg" of the end
+    Code[arg] = Number(val);
 }
 
 function dragElement(elmnt) {
@@ -79,7 +104,7 @@ function dragElement(elmnt) {
         pos2 = e.clientY - top;
         document.onmouseup = closeDragElement;
         // call a function whenever the cursor moves:
-        document.onmousemove = elementDrag;
+        document.getElementById("Code").onmousemove = elementDrag;
     }
 
     function elementDrag(e) {
@@ -96,6 +121,6 @@ function dragElement(elmnt) {
     function closeDragElement() {
         /* stop moving when mouse button is released:*/
         document.onmouseup = null;
-        document.onmousemove = null;
+        document.getElementById("Code").onmousemove = null;
     }
 }

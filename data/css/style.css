@@ -1,24 +1,23 @@
 html {
     font-family: Helvetica;
-    display: inline-block;
+    display: block;
     margin: 0px auto;
+    background-color: #000000;
 }
 
-.Block_List{
-    color: #ffffff;
-    background-color: #129393;
-    clear: both;
-    font-size: 30px;
-    border-radius: 5px;
-    border: none;
-    margin: 5px;
-    display: inline-block;
-    padding: 8px;
+.Block_List {
+    overflow-x: auto;
+    overflow-y: auto;
+    width: 250px;
+    border-radius: 10px;
+    border-color: #808080;
+    height: 1000px;
 }
+
 div.Editor {
     position: absolute;
     top: 5px;
-    left: 250px;
+    left: 270px;
     width: 1000px;
     height: 800px;
     border: dashed;
@@ -27,8 +26,10 @@ div.Editor {
     border-radius: 5px;
     margin: 5px;
     padding: 16px;
+    background-color: #000000;
 }
-.button{
+
+.button {
     color: #ffffff;
     background-color: #129393;
     clear: both;
@@ -36,19 +37,54 @@ div.Editor {
     border-radius: 5px;
     border: none;
     margin: 5px;
-    display: inline-block;
     padding: 8px;
+    width: fit-content;
 }
-.CodeBlock{
+
+.CodeBlock {
     color: #ffffff;
     background-color: #129393;
     clear: both;
     font-size: 30px;
     border-radius: 5px;
     border: none;
-    margin: 5px;
-    display: inline-block;
+    height: 36px;
+    margin: 2px;
     padding: 8px;
     cursor: move;
     position: absolute;
+}
+
+.ListBlock {
+    position: relative;
+    cursor: default;
+    box-sizing: content-box;
+    width: max-content;
+}
+
+.argInput {
+    border-width: 1px;
+    border-radius: 8px;
+    width: 50px;
+    font-size: 26px;
+    border-style: solid;
+}
+
+.custom-select {
+    width: min-content;
+}
+
+select {
+    appearance: none;
+    /* safari */
+    -webkit-appearance: none;
+    /* other styles for aesthetics */
+    width: 100%;
+    font-size: 1.15rem;
+    padding: 0.675em 6em 0.675em 1em;
+    background-color: #fff;
+    border: 1px solid #caced1;
+    border-radius: 0.25rem;
+    color: #000;
+    cursor: pointer;
 }
