@@ -1,0 +1,54 @@
+html {
+    font-family: Helvetica;
+    display: inline-block;
+    margin: 0px auto;
+}
+
+.Block_List{
+    color: #ffffff;
+    background-color: #129393;
+    clear: both;
+    font-size: 30px;
+    border-radius: 5px;
+    border: none;
+    margin: 5px;
+    display: inline-block;
+    padding: 8px;
+}
+div.Editor {
+    position: absolute;
+    top: 5px;
+    left: 250px;
+    width: 1000px;
+    height: 800px;
+    border: dashed;
+    border-color: #808080;
+    border-width: 3px;
+    border-radius: 5px;
+    margin: 5px;
+    padding: 16px;
+}
+.button{
+    color: #ffffff;
+    background-color: #129393;
+    clear: both;
+    font-size: 30px;
+    border-radius: 5px;
+    border: none;
+    margin: 5px;
+    display: inline-block;
+    padding: 8px;
+}
+.CodeBlock{
+    color: #ffffff;
+    background-color: #129393;
+    clear: both;
+    font-size: 30px;
+    border-radius: 5px;
+    border: none;
+    margin: 5px;
+    display: inline-block;
+    padding: 8px;
+    cursor: move;
+    position: absolute;
+}
