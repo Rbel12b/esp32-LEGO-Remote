@@ -37,7 +37,7 @@ function SetupBlocks() {
         if (BLOCK_NAME[i] == "") {
             continue;
         }
-        html += ("<button name=\"" + (i + 1) + "\" class=\"CodeBlock ListBlock\" onclick=\"AddBlock(this)\">" + BLOCK_NAME[i] + "</button><br>");
+        html += ("<button name=\"" + (i + 1) + "\" class=\"CodeBlock ListBlock\" onclick=\"AddBlock(this)\">" + BLOCK_NAME[i] + "</button>");
     }
     document.getElementById("BlockList").innerHTML = html;
     for (var i = 0; i < NUM_BLOCKS; i++) {
@@ -59,13 +59,28 @@ function AddBlock(block) {
     CodeLenght += 1;
     updateCode();
 }
+function deleteBlock(Block){
+    let index = Number(Block.id.slice(0,-6));
+    let len = BLOCK_LEN[Code[index]];
+    Code.splice(index,len + 1);
+    CodeLenght -= (1 + len);
+    Block.remove();
+    for(let i = index; i < CodeLenght; i++){
+        document.getElementById((i + len + 1) + "_Block").id = (i + "_Block");
+        i += BLOCK_LEN[Code[i]];
+    }
+    if(!document.getElementById("Code").innerHTML){
+        document.getElementById("Code").innerHTML = "";
+        Code.splice(0);
+    }
+}
 function updateCode() {
     var html = "";
     for (let i = 0; i < CodeLenght; i++) {
         let len = BLOCK_LEN[Code[i]]
         i += len;
         if (i == CodeLenght - 1) {
-            html += ("<div  class=\"CodeBlock\" id=\"" + (i - len) + "_Block\">" + getBlockHtml(i - len, Code) + "</div><br>");
+            html += ("<div  class=\"CodeBlock\" id=\"" + (i - len) + "_Block\">" + getBlockHtml(i - len, Code) + "</div>");
         }
     }
     document.getElementById("Code").innerHTML += html;
@@ -90,7 +105,6 @@ function selectArgChange(BlockArg) {
     let val = BlockArg.value;
     let arg = BlockArg.id.slice(5, 10); // sclie off "math_" of the start
     Code[arg] = Number(val);
-    console.log(arg);
     return true;
 }
 function dragElement(elmnt) {
@@ -129,5 +143,12 @@ function dragElement(elmnt) {
         /* stop moving when mouse button is released:*/
         document.getElementById("Code").onmouseup = null;
         document.getElementById("Code").onmousemove = null;
+        let left = elmnt.style.left;
+        left = left.slice(0, -2);
+        let top = elmnt.style.top;
+        top = top.slice(0, -2);
+        if(left < -180){
+            deleteBlock(elmnt);
+        }
     }
 }

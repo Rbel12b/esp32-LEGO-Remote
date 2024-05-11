@@ -14,7 +14,7 @@ html {
     height: 1000px;
 }
 
-div.Editor {
+.Editor {
     position: absolute;
     top: 5px;
     left: 270px;
@@ -71,7 +71,7 @@ div.Editor {
 .argInput {
     border-width: 1px;
     border-radius: 8px;
-    width: fit-content;
+    width: 80px;
     font-size: 26px;
     border-style: solid;
 }
