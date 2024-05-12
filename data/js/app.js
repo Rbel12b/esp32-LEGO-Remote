@@ -66,9 +66,9 @@ function AddBlock(block) {
     NumbeOfBlocks++;
     updateCode();
 }
-function devareBlock(Block) {
+function deleteBlock(Block) {
     if (Block.attachedBlock) {
-        devareBlock(Block.attachedBlock);
+        deleteBlock(Block.attachedBlock);
     }
     var index = Number(Block.id.slice(0, -6));
     var Bnumber = Number(Block.name);
@@ -132,10 +132,6 @@ function scanBlockPos() {
     }
 }
 function searchPos(leftMin, leftMax, topMin, topMax, block) {
-    console.log(leftMin);
-    console.log(leftMax);
-    console.log(topMin);
-    console.log(topMax);
     for (var i = 0; i < NumbeOfBlocks; i++) {
         var pos = BlockPos[i];
         if (pos.left >= leftMin &&
@@ -164,6 +160,7 @@ function selectArgChange(BlockArg) {
 }
 function dragElement(elmnt) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    var block = document.getElementById("Code");
 
     /* otherwise, move the DIV from anywhere inside the DIV:*/
     elmnt.getElementsByTagName("div")[0].onmousedown = dragMouseDown;
@@ -181,6 +178,10 @@ function dragElement(elmnt) {
         document.onmouseup = closeDragElement;
         // call a function whenever the cursor moves:
         document.onmousemove = elementDrag;
+        if(elmnt.attachedToBlock){
+            elmnt.attachedToBlock.attachedBlock = undefined;
+            elmnt.attachedToBlock = undefined;
+        }
     }
 
     function elementDrag(e) {
@@ -192,8 +193,20 @@ function dragElement(elmnt) {
         // set the element's new position:
         elmnt.style.top = (pos4 - pos2) + "px";
         elmnt.style.left = (pos3 - pos1) + "px";
+        var left = elmnt.style.left;
+        left = left.slice(0, -2);
+        var top = elmnt.style.top;
+        top = top.slice(0, -2);
         if (elmnt.attachedBlock) {
             Drag(elmnt.attachedBlock, (pos4 - pos2), (pos3 - pos1));
+        }
+        var availablebBlock = searchPos(left - 50, left + 50, top - 125, top, elmnt);
+        if(block != availablebBlock && block){
+            block.getElementsByClassName("BlockConnector")[0].style.borderBottomColor = "#808080";
+        }
+        if (availablebBlock) {
+            availablebBlock.getElementsByClassName("BlockConnector")[0].style.borderBottomColor = "#ffffff";
+            block = availablebBlock;
         }
     }
 
@@ -206,12 +219,14 @@ function dragElement(elmnt) {
         var top = elmnt.style.top;
         top = top.slice(0, -2);
         if (left < -180) {
-            devareBlock(elmnt);
+            deleteBlock(elmnt);
             scanBlockPos();
             return;
         }
-        var block = searchPos(left - 25, left + 25, top - 75, top, elmnt);
+        block = searchPos(left - 50, left + 50, top - 125, top, elmnt);
         if (block) {
+            block.getElementsByClassName("BlockConnector")[0].style.borderBottomColor = "#808080"
+            Drag(elmnt,Number(block.style.top.slice(0,-2)),Number(block.style.left.slice(0,-2)));
             if (block.attachedBlock) {
                 var endelement = elmnt.attachedBlock;
                 while (endelement.attachedBlock) {
@@ -220,11 +235,12 @@ function dragElement(elmnt) {
                 endelement.attachedBlock = block.attachedBlock;
             }
             block.attachedBlock = elmnt;
+            elmnt.attachedToBlock = block;
         }
         scanBlockPos();
     }
 }
-function Drag(element, _top, _left) {
+function Drag(element, _top = 0, _left = 0) {
     element.style.top = (_top + 51) + "px";
     element.style.left = (_left) + "px";
     if (element.attachedBlock) {
