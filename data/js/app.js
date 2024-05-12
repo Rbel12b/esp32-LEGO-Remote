@@ -48,62 +48,117 @@ function SetupBlocks() {
         document.getElementsByName(i + 1)[0].style.color = BLOCK_TEXT_COLOR[i + 1];
     }
 }
+const BlockPos = [{ top: 0, left: 0 }];
+var NumbeOfBlocks = 0;
 function AddBlock(block) {
     var newBlock = block.name;
     var blockNum = Number(newBlock)
     Code.push(blockNum);
-    for (let i = 0; i < BLOCK_LEN[blockNum]; i++) {
+    var pos = { top: 0, left: 0 };
+    pos.top = 0;
+    pos.left = 0;
+    BlockPos.push(pos);
+    for (var i = 0; i < BLOCK_LEN[blockNum]; i++) {
         Code.push(0);
         CodeLenght += 1;
     }
     CodeLenght += 1;
+    NumbeOfBlocks++;
     updateCode();
 }
-function deleteBlock(Block){
-    let index = Number(Block.id.slice(0,-6));
-    let len = BLOCK_LEN[Code[index]];
-    Code.splice(index,len + 1);
+function devareBlock(Block) {
+    if (Block.attachedBlock) {
+        devareBlock(Block.attachedBlock);
+    }
+    var index = Number(Block.id.slice(0, -6));
+    var Bnumber = Number(Block.name);
+    var len = BLOCK_LEN[Code[index]];
+    Code.splice(index, len + 1);
     CodeLenght -= (1 + len);
+    BlockPos.splice(Bnumber, 1);
+    NumbeOfBlocks--;
     Block.remove();
-    for(let i = index; i < CodeLenght; i++){
+    var num = 0;
+    for (var i = index; i < CodeLenght; i++) {
+        document.getElementById((i + len + 1) + "_Block").name = (num + "_Block");
         document.getElementById((i + len + 1) + "_Block").id = (i + "_Block");
         i += BLOCK_LEN[Code[i]];
+        num++;
     }
-    if(!document.getElementById("Code").innerHTML){
-        document.getElementById("Code").innerHTML = "";
-        Code.splice(0);
-    }
+    scanBlockPos();
 }
 function updateCode() {
     var html = "";
-    for (let i = 0; i < CodeLenght; i++) {
-        let len = BLOCK_LEN[Code[i]]
+    var num = 0;
+    for (var i = 0; i < CodeLenght; i++) {
+        var len = BLOCK_LEN[Code[i]];
         i += len;
         if (i == CodeLenght - 1) {
-            html += ("<div  class=\"CodeBlock\" id=\"" + (i - len) + "_Block\">" + getBlockHtml(i - len, Code) + "</div>");
+            html += ("<div  class=\"CodeBlock\" id=\"" + (i - len) + "_Block\" name=\"" + num + "_Block\">" + getBlockHtml(i - len, Code) + "\
+            <div class=\"CodeBlock BlockConnector\"></div></div>");
         }
+        num++;
     }
     document.getElementById("Code").innerHTML += html;
-    for (let i = 0; i < CodeLenght; i++) {
-        let element = document.getElementById(i + "_Block");
+    var offset = 0;
+    for (var i = 0; i < CodeLenght; i++) {
+        var element = document.getElementById(i + "_Block");
+        while (searchPos(offset - 75, offset - 25, offset - 75, offset - 25, element) == false && offset > 0) {
+            offset -= 50;
+        }
         dragElement(element);
-        let len = BLOCK_LEN[Code[i]]
+        var len = BLOCK_LEN[Code[i]];
         i += len;
         if (i == CodeLenght - 1) {
-            element.style.backgroundColor = BLOCK_COLOR[Code[(i - len)]]
-            element.style.color = BLOCK_TEXT_COLOR[Code[(i - len)]]
+            element.style.backgroundColor = BLOCK_COLOR[Code[(i - len)]];
+            element.getElementsByClassName("BlockConnector")[0].style.backgroundColor = BLOCK_COLOR[Code[(i - len)]];
+            element.style.color = BLOCK_TEXT_COLOR[Code[(i - len)]];
+            element.style.left = offset + "px";
+            element.style.top = offset + "px";
         }
+        offset += 50;
+    }
+    scanBlockPos();
+}
+function scanBlockPos() {
+    var num = 0;
+    for (var i = 0; i < CodeLenght; i++) {
+        var element = document.getElementById(i + "_Block");
+        BlockPos[num].top = element.style.top.slice(0, -2);
+        BlockPos[num].left = element.style.left.slice(0, -2);
+        var len = BLOCK_LEN[Code[i]];
+        i += len;
+        num++;
     }
 }
+function searchPos(leftMin, leftMax, topMin, topMax, block) {
+    console.log(leftMin);
+    console.log(leftMax);
+    console.log(topMin);
+    console.log(topMax);
+    for (var i = 0; i < NumbeOfBlocks; i++) {
+        var pos = BlockPos[i];
+        if (pos.left >= leftMin &&
+            pos.left <= leftMax &&
+            pos.top >= topMin &&
+            pos.top <= topMax) {
+            var r = document.getElementsByName(i + "_Block")[0];
+            if(r != block){
+                return r;
+            }
+        }
+    }
+    return false;
+}
 function ArgChange(BlockArg) {
-    let val = BlockArg.value;
-    let arg = BlockArg.id.slice(0, -4); // sclie off "_Arg" of the end
+    var val = BlockArg.value;
+    var arg = BlockArg.id.slice(0, -4); // sclie off "_Arg" of the end
     Code[arg] = Number(val);
     return true;
 }
 function selectArgChange(BlockArg) {
-    let val = BlockArg.value;
-    let arg = BlockArg.id.slice(5, 10); // sclie off "math_" of the start
+    var val = BlockArg.value;
+    var arg = BlockArg.id.slice(5, 10); // sclie off "math_" of the start
     Code[arg] = Number(val);
     return true;
 }
@@ -117,15 +172,15 @@ function dragElement(elmnt) {
         //e = e || window.event;
         e.preventDefault();
         // get the mouse cursor position at startup:
-        let left = elmnt.style.left;
+        var left = elmnt.style.left;
         left = left.slice(0, -2);
-        let top = elmnt.style.top;
+        var top = elmnt.style.top;
         top = top.slice(0, -2);
         pos1 = e.clientX - left;
         pos2 = e.clientY - top;
-        document.getElementById("Code").onmouseup = closeDragElement;
+        document.onmouseup = closeDragElement;
         // call a function whenever the cursor moves:
-        document.getElementById("Code").onmousemove = elementDrag;
+        document.onmousemove = elementDrag;
     }
 
     function elementDrag(e) {
@@ -137,18 +192,42 @@ function dragElement(elmnt) {
         // set the element's new position:
         elmnt.style.top = (pos4 - pos2) + "px";
         elmnt.style.left = (pos3 - pos1) + "px";
+        if (elmnt.attachedBlock) {
+            Drag(elmnt.attachedBlock, (pos4 - pos2), (pos3 - pos1));
+        }
     }
 
     function closeDragElement() {
         /* stop moving when mouse button is released:*/
-        document.getElementById("Code").onmouseup = null;
-        document.getElementById("Code").onmousemove = null;
-        let left = elmnt.style.left;
+        document.onmouseup = null;
+        document.onmousemove = null;
+        var left = elmnt.style.left;
         left = left.slice(0, -2);
-        let top = elmnt.style.top;
+        var top = elmnt.style.top;
         top = top.slice(0, -2);
-        if(left < -180){
-            deleteBlock(elmnt);
+        if (left < -180) {
+            devareBlock(elmnt);
+            scanBlockPos();
+            return;
         }
+        var block = searchPos(left - 25, left + 25, top - 75, top, elmnt);
+        if (block) {
+            if (block.attachedBlock) {
+                var endelement = elmnt.attachedBlock;
+                while (endelement.attachedBlock) {
+                    endelement = endelement.attachedBlock;
+                }
+                endelement.attachedBlock = block.attachedBlock;
+            }
+            block.attachedBlock = elmnt;
+        }
+        scanBlockPos();
+    }
+}
+function Drag(element, _top, _left) {
+    element.style.top = (_top + 51) + "px";
+    element.style.left = (_left) + "px";
+    if (element.attachedBlock) {
+        Drag(element.attachedBlock, _top + 51, _left);
     }
 }

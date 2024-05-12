@@ -18,8 +18,8 @@ html {
     position: absolute;
     top: 5px;
     left: 270px;
-    width: 1000px;
-    height: 800px;
+    width: 1800px;
+    height: 1400px;
     border: dashed;
     border-color: #808080;
     border-width: 3px;
@@ -43,7 +43,7 @@ html {
 
 .CodeBlock {
     color: #ffffff;
-    background-color: #129393;
+    background-color: #ff0000;
     clear: both;
     font-size: 30px;
     border-radius: 5px;
@@ -55,6 +55,22 @@ html {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+}
+.BlockConnector{
+    left: 20px;
+    top: 51px;
+    height: 8px;
+    width: 25px;
+    margin: 0px;
+    padding: 0px;
+    border-radius: 0px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    display: block;
+    background-color: #ff0000;
+    border-color: #ffffff;
+    border-width: 1px;
+    border-style: none;
 }
 
 .MoveBlock {
