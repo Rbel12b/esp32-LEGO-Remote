@@ -1,6 +1,6 @@
 # ESP32-LEGO-Remote
 
-*Disclaimer*: LEGO® is a trademark of the LEGO Group of companies which does not sponsor, authorize or endorse this project.
+## This project is currently in the development phase!
 
 **ESP32-LEGO-Remote** is a project for programming all kinds of *LEGO* Powered UP devices. From the two port hub, Move Hub (e.g. Boost), DUPLO train hub, Technic Hub.
 
