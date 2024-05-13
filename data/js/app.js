@@ -200,7 +200,7 @@ function dragElement(elmnt) {
         if (elmnt.attachedBlock) {
             Drag(elmnt.attachedBlock, (pos4 - pos2), (pos3 - pos1));
         }
-        var availablebBlock = searchPos(left - 50, left + 50, top - 125, top, elmnt);
+        var availablebBlock = searchPos(left - 75, left + 75, top - 125, top, elmnt);
         if(block != availablebBlock && block){
             block.getElementsByClassName("BlockConnector")[0].style.borderBottomColor = "#808080";
         }
@@ -223,27 +223,33 @@ function dragElement(elmnt) {
             scanBlockPos();
             return;
         }
-        block = searchPos(left - 50, left + 50, top - 125, top, elmnt);
+        block = searchPos(left - 75, left + 75, top - 125, top, elmnt);
         if (block) {
             block.getElementsByClassName("BlockConnector")[0].style.borderBottomColor = "#808080"
-            Drag(elmnt,Number(block.style.top.slice(0,-2)),Number(block.style.left.slice(0,-2)));
             if (block.attachedBlock) {
                 var endelement = elmnt.attachedBlock;
-                while (endelement.attachedBlock) {
+                while (endelement && endelement.attachedBlock) {
                     endelement = endelement.attachedBlock;
                 }
-                endelement.attachedBlock = block.attachedBlock;
+                if(endelement){
+                    endelement.attachedBlock = block.attachedBlock;
+                    block.attachedBlock = endelement;
+                }
             }
             block.attachedBlock = elmnt;
             elmnt.attachedToBlock = block;
+            Drag(elmnt,Number(block.style.top.slice(0,-2)),Number(block.style.left.slice(0,-2)));
         }
         scanBlockPos();
     }
 }
 function Drag(element, _top = 0, _left = 0) {
-    element.style.top = (_top + 51) + "px";
+    element.style.top = (_top + 55) + "px";
     element.style.left = (_left) + "px";
-    if (element.attachedBlock) {
-        Drag(element.attachedBlock, _top + 51, _left);
+    while (element.attachedBlock) {
+        _top += 55;
+        element = element.attachedBlock;
+        element.style.top = (_top + 51) + "px";
+        element.style.left = (_left) + "px";
     }
 }
