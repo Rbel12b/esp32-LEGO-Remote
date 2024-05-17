@@ -110,8 +110,8 @@ function updateCode() {
             element.style.top = offset + "px";
             Code[i].pos.left = offset;
             Code[i].pos.top = offset;
-            element.getElementsByTagName("div")[0].addEventListener("mousedown",dragBlock);
         }
+        element.getElementsByTagName("div")[0].addEventListener("mousedown",dragBlock);
         offset += 50;
     }
 }/*

@@ -5,62 +5,62 @@ function getBlockHtml(index = 0, Code = [new BlockData()]) {
             return '<div class="MoveBlock">Turn Motor by </div>\
             <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[0] + '" onchange="ArgChange(this)" name="0"> \
             degrees, Hub: \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="7">, \
+            <input type="number" class="argInput" id="' + index + '_Ar1" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="7">, \
             Port: \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[2] + '" onchange="ArgChange(this)" name="2" min="0" max="5">';
+            <input type="number" class="argInput" id="' + index + '_Ar2" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="2" min="0" max="5">';
         case 2:
             return '<div class="MoveBlock">Set Motor speed to </div>\
             <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[0] + '" onchange="ArgChange(this)" name="0">\
             %, HUB: \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="7">\
+            <input type="number" class="argInput" id="' + index + '_Ar1" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="7">\
             , Port: \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[2] + '" onchange="ArgChange(this)" name="2" min="0" max="5">';
+            <input type="number" class="argInput" id="' + index + '_Ar2" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="2" min="0" max="5">';
         case 3:
             return '<div class="MoveBlock">Run Motor for </div>\
             <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[0] + '" onchange="ArgChange(this)" name="0">\
             milliseconds, HUB: \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="7">\
+            <input type="number" class="argInput" id="' + index + '_Ar1" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="7">\
             , Port: \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[2] + '" onchange="ArgChange(this)" name="2" min="0" max="5">';
+            <input type="number" class="argInput" id="' + index + '_Ar2" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="2" min="0" max="5">';
         case 4:
             return '<div class="MoveBlock">Turn Motor to absolute posision </div>\
             <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[0] + '" onchange="ArgChange(this)" name="0">\
             °, HUB: \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="7">\
+            <input type="number" class="argInput" id="' + index + '_Ar1" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="7">\
             , Port: \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[2] + '" onchange="ArgChange(this)" name="2" min="0" max="5">';
+            <input type="number" class="argInput" id="' + index + '_Ar2" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="2" min="0" max="5">';
         case 5:
             return '<div class="MoveBlock">Set Motor encoder to </div>\
             <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[0] + '" onchange="ArgChange(this)" name="0">\
             °, HUB: \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="7">\
+            <input type="number" class="argInput" id="' + index + '_Ar1" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="7">\
             , Port: \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[2] + '" onchange="ArgChange(this)" name="2" min="0" max="5">';
+            <input type="number" class="argInput" id="' + index + '_Ar2" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="2" min="0" max="5">';
         case 7:
             return '<div class="MoveBlock">var </div>\
             <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[0] + '" onchange="ArgChange(this)" name="0" min="0" max="255">\
             equals to \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="255">';
+            <input type="number" class="argInput" id="' + index + '_Ar1" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="255">';
         case 8:
             return '<div class="MoveBlock">var </div>\
             <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[0] + '" onchange="ArgChange(this)" name="0" min="0" max="255">\
             * var \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="255">';
+            <input type="number" class="argInput" id="' + index + '_Ar1" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="255">';
         case 9:
             return '<div class="MoveBlock">var </div>\
             <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[0] + '" onchange="ArgChange(this)" name="0" min="0" max="255">\
             / var \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="255">';
+            <input type="number" class="argInput" id="' + index + '_Ar1" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="255">';
         case 10:
             return '<div class="MoveBlock">var </div>\
             <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[0] + '" onchange="ArgChange(this)" name="0" min="0" max="255">\
             + var \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="255">';
+            <input type="number" class="argInput" id="' + index + '_Ar1" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="255">';
         case 11:
             return '<div class="MoveBlock">var </div>\
             <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[0] + '" onchange="ArgChange(this)" name="0" min="0" max="255">\
             - var \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="255">';
+            <input type="number" class="argInput" id="' + index + '_Ar1" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="255">';
         case 12:
             return '<div class="MoveBlock">If var </div>\
             <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[0] + '" onchange="ArgChange(this)" name="0" min="0" max="255">';
@@ -76,7 +76,7 @@ function getBlockHtml(index = 0, Code = [new BlockData()]) {
                 <option value="5">not</option>\
             </select></div> \
             var \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[2] + '" onchange="ArgChange(this)" name="2" min="0" max="255">';
+            <input type="number" class="argInput" id="' + index + '_Ar2" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="2" min="0" max="255">';
         case 14:
             return '<span class="custom-select" name="math"><select id="math_' + index + '" value="' + Code[index].args[0] + '" onchange="selectArgChange(this)" name="0">\
                 <option value="0">round</option>\
@@ -96,30 +96,30 @@ function getBlockHtml(index = 0, Code = [new BlockData()]) {
                 <option value="14">ceiling</option>\
             </select></span>\
             <div class="MoveBlock">(var </div>\
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="255">\
+            <input type="number" class="argInput" id="' + index + '_Ar1" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="255">\
             )';
         case 15:
             return '<div class="MoveBlock">var</div>\
             <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[0] + '" onchange="ArgChange(this)" name="0" min="0" max="255">\
             Mod var \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="255">';
+            <input type="number" class="argInput" id="' + index + '_Ar1" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="255">';
         case 16:
             return '<div class="MoveBlock">Set Motor PWM to </div>\
             <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[0] + '" onchange="ArgChange(this)" name="0">\
             , Channel: \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="3">\
+            <input type="number" class="argInput" id="' + index + '_Ar1" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="3">\
             , Port: \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[2] + '" onchange="ArgChange(this)" name="2" min="0" max="1">';
+            <input type="number" class="argInput" id="' + index + '_Ar2" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="2" min="0" max="1">';
         case 17:
             return '<div class="MoveBlock">Increment, Channel: </div>\
             <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[0] + '" onchange="ArgChange(this)" name="0" min="0" max="3">\
             , Port: \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="1">';
+            <input type="number" class="argInput" id="' + index + '_Ar1" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="1">';
         case 18:
             return '<div class="MoveBlock">Decrement, Channel: </div>\
             <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[0] + '" onchange="ArgChange(this)" name="0" min="0" max="3">\
             , Port: \
-            <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="1">';
+            <input type="number" class="argInput" id="' + index + '_Ar1" value="' + Code[index].args[1] + '" onchange="ArgChange(this)" name="1" min="0" max="1">';
         case 19:
             return '<div class="MoveBlock">var </div>\
             <input type="number" class="argInput" id="' + index + '_Arg" value="' + Code[index].args[0] + '" onchange="ArgChange(this)" name="0" min="0" min="0" max="255">';
