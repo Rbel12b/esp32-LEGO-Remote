@@ -35,7 +35,7 @@
     }
 
     function saveFile(evt){
-        var title = prompt("Save file as: ");
+        var title = "program";
         if (!title){ return; }
         var file = new Blob([scriptToJson()], {type: 'application/json'});
         var reader = new FileReader();
