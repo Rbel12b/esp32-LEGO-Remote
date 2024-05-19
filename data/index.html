@@ -1,27 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <title>Remote Contoller</title>
-
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+	<title>Block Code</title>
+	<link rel="stylesheet" type="text/css" href="css/blocks.css">
 </head>
 
-<body onload="setup()">
-    <div>
-        <div id="BlockList" class="Block_List"></div>
-        <div id="Code" class="Editor">
-        </div>
-    </div>
-    <br>
-    <button id="Submit" onclick="submitCode()" class="button">Submit</button>
+<body>
+	<h1>Block Code</h1>
+	<div class="menu-column">
+		<h2>Menu</h2>
+		<div class="menu">
+			<!--<div class="block" draggable="true" data-name="Repeat">Repeat<input type="number" value="10">
+				<div class="container"></div>
+			</div>
+			<div class="block" draggable="true" data-name="Left">Left<input type="number" value="5"> degrees</div>
+			<div class="block" draggable="true" data-name="Right">Right<input type="number" value="5"> degrees</div>
+			<div class="block" draggable="true" data-name="Forward">Forward<input type="number" value="10"> steps</div>
+			<div class="block" draggable="true" data-name="Back">Back<input type="number" value="10"> steps</div>
+			<div class="block" draggable="true" data-name="Pen up">Pen up</div>
+			<div class="block" draggable="true" data-name="Pen down">Pen down</div>
+			<div class="block" draggable="true" data-name="Back to center">Back to center</div>
+			<div class="block" draggable="true" data-name="Hide turtle">Hide turtle</div>
+			<div class="block" draggable="true" data-name="Show turtle">Show turtle</div>-->
+		</div>
+	</div>
+	<div class="script-column">
+		<h2>
+			Script:
+			<button class="clear-action">Clear</button>
+			<button class="save-action">Save</button>
+			<button class="load-action">Load</button>
+		</h2>
+		<div class="script">
+		</div>
+	</div>
+	<div class="canvas-column">
+		<h2>Examples:
+			<select class="choose-example">
+				<option value="">Choose Example</option>
+				<option value="triangle">Triangle</option>
+				<option value="circle">Tiny Circle</option>
+				<option value="spiral">Spiral</option>
+			</select>
+		</h2>
+		<div class="canvas-placeholder"></div>
+		<canvas class="canvas" width="588.796875" height="655.296875"
+			style="top: 103.812px; left: 681.203px; width: 588.797px; height: 655.297px;"></canvas>
+	</div>
+	<script src="js/util.js"></script>
+	<script src="js/drag.js"></script>
+	<script src="js/file.js"></script>
+	<script src="js/blocks.js"></script>
+	<script src="js/menu.js"></script>
+	<script src="js/turtle.js"></script>
+	<script src="js/spiral.js"></script>
+	<script src="js/tiny_circle.js"></script>
+	<script src="js/triangle.js"></script>
 
-    <script src="js/app.js"></script>
-    <script src="js/Block-Definitions.js"></script>
+
 </body>
 
 </html>

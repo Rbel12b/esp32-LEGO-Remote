@@ -40,6 +40,10 @@ class BlockData {
         pos.top = 0;
         pos.left = 0;
         this.pos = pos;
+        this.pos1 = 0;
+        this.pos2 = 0;
+        this.pos3 = 0;
+        this.pos4 = 0;
         return this;
     }
 }
@@ -77,23 +81,24 @@ function AddBlock(block = HTMLElement) {
 function deleteBlock(Block = new BlockData()) {
     do {
         var index = Block.id;
+        NumbeOfBlocks--;
+        Block.block.remove();
+        Block = Block.next;
         Code.splice(index, 1);
         BlockPos.splice(index, 1);
-        NumbeOfBlocks--;
-        Block.remove();
-        for (var i = index; i < NumbeOfBlocks; i++) {
+        for (var i = 0; i < NumbeOfBlocks; i++) {
             Code[i].block.id = (i + "_Block");
             Code[i].id = i;
         }
-        Block = Block.next;
     } while (Block);
 }
 function updateCode() {
-    var html = "";
     var i = NumbeOfBlocks - 1;
-    html += ('<div  class="CodeBlock" id="' + i + '_Block">' + getBlockHtml(i, Code) + '\
-    <div class="CodeBlock BlockConnector"></div></div>');
-    document.getElementById("Code").innerHTML += html;
+    var newBlock = document.createElement("div");
+    newBlock.innerHTML = getBlockHtml(i, Code) + '<div class="CodeBlock BlockConnector"></div>';
+    newBlock.id = i + '_Block';
+    newBlock.className = 'CodeBlock';
+    document.getElementById("Code").appendChild(newBlock);
     Code[i].block = document.getElementById(i + "_Block");
 
     var offset = 0;
@@ -111,21 +116,11 @@ function updateCode() {
             Code[i].pos.left = offset;
             Code[i].pos.top = offset;
         }
-        element.getElementsByTagName("div")[0].addEventListener("mousedown",dragBlock);
         offset += 50;
+        element.getElementsByTagName("div")[0].removeEventListener("mousedown", dragBlock);
+        element.getElementsByTagName("div")[0].addEventListener("mousedown", dragBlock);
     }
-}/*
-function scanBlockPos() {
-    var num = 0;
-    for (var i = 0; i < NumbeOfBlocks; i++) {
-        var element = document.getElementById(i + "_Block");
-        BlockPos[num].top = element.style.top.slice(0, -2);
-        BlockPos[num].left = element.style.left.slice(0, -2);
-        var len = BLOCK_LEN[Code[i]];
-        i += len;
-        num++;
-    }
-}*/
+}
 function searchPos(leftMin, leftMax, topMin, topMax, block) {
     for (var i = 0; i < NumbeOfBlocks; i++) {
         var pos = Code[i].pos;
@@ -156,10 +151,14 @@ function selectArgChange(BlockArg) {
     return true;
 }
 function dragBlock(e) {
-    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-    var elmnt = Code[Number(e.target.parentElement.id.slice(0,-6))];
-    var block = elmnt;
-    console.log(elmnt);
+    if(!e.target.parentElement){
+        return;
+    }
+    var elmnt = Code[Number(e.target.parentElement.id.slice(0, -6))];
+    if(!elmnt){
+        return;
+    }
+    //console.log(elmnt);
     e = e || window.event;
     e.preventDefault();
     // get the mouse cursor position at startup:
@@ -167,78 +166,93 @@ function dragBlock(e) {
     left = left.slice(0, -2);
     var top = elmnt.block.style.top;
     top = top.slice(0, -2);
-    pos1 = e.clientX - left;
-    pos2 = e.clientY - top;
-    document.onmouseup = closeDragElement;
+    elmnt.pos1 = e.clientX - left;
+    elmnt.pos2 = e.clientY - top;
+    document.addEventListener("mouseup", closeDragElement);
     // call a function whenever the cursor moves:
-    document.onmousemove = elementDrag;
+    document.addEventListener("mousemove", elementDrag);
     if (elmnt.prev) {
         elmnt.prev.next = undefined;
         elmnt.prev = undefined;
     }
     return elmnt;
-
-    function elementDrag(e) {
-        //e = e || window.event;
-        e.preventDefault();
-        // calculate the new cursor position:
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        // set the element's new position:
-        elmnt.block.style.top = (pos4 - pos2) + "px";
-        elmnt.block.style.left = (pos3 - pos1) + "px";
-        var left = elmnt.block.style.left;
-        left = left.slice(0, -2);
-        var top = elmnt.block.style.top;
-        top = top.slice(0, -2);
-        elmnt.pos.left = left;
-        elmnt.pos.top = top;
-        if (elmnt.next) {
-            Drag(elmnt.next, (pos4 - pos2), (pos3 - pos1));
-        }
-        var availablebBlock = searchPos(left - 75, left + 75, top - 125, top, elmnt);
-        if (block != availablebBlock && block) {
-            block.block.getElementsByClassName("BlockConnector")[0].style.borderBottomColor = "#808080";
-        }
-        if (availablebBlock) {
-            availablebBlock.block.getElementsByClassName("BlockConnector")[0].style.borderBottomColor = "#ffffff";
-            block = availablebBlock;
-        }
+}
+function elementDrag(e) {
+    if(!e.target.parentElement){
+        return;
     }
+    var elmnt = Code[Number(e.target.parentElement.id.slice(0, -6))];
+    if(!elmnt){
+        return;
+    }
+    var block = elmnt;
+    //e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    elmnt.pos3 = e.clientX;
+    elmnt.pos4 = e.clientY;
+    // set the element's new position:
+    elmnt.block.style.top = (elmnt.pos4 - elmnt.pos2) + "px";
+    elmnt.block.style.left = (elmnt.pos3 - elmnt.pos1) + "px";
+    var left = elmnt.block.style.left;
+    left = left.slice(0, -2);
+    var top = elmnt.block.style.top;
+    top = top.slice(0, -2);
+    elmnt.pos.left = left;
+    elmnt.pos.top = top;
+    if (elmnt.next) {
+        Drag(elmnt.next, (elmnt.pos4 - elmnt.pos2), (elmnt.pos3 - elmnt.pos1));
+    }
+    var availablebBlock = searchPos(left - 75, left + 75, top - 125, top, elmnt);
+    if (block != availablebBlock && block) {
+        block.block.getElementsByClassName("BlockConnector")[0].style.borderBottomColor = "#808080";
+    }
+    if (availablebBlock) {
+        availablebBlock.block.getElementsByClassName("BlockConnector")[0].style.borderBottomColor = "#ffffff";
+        block = availablebBlock;
+    }
+}
 
-    function closeDragElement() {
-        /* stop moving when mouse button is released:*/
-        document.onmouseup = null;
-        document.onmousemove = null;
-        var left = elmnt.block.style.left;
-        left = left.slice(0, -2);
-        var top = elmnt.block.style.top;
-        top = top.slice(0, -2);
-        if (left < -180) {
-            deleteBlock(elmnt);
-            return;
-        }
-        block = searchPos(left - 75, left + 75, top - 125, top, elmnt);
-        if (block) {
-            block.block.getElementsByClassName("BlockConnector")[0].style.borderBottomColor = "#808080"
-            if (block.next) {
-                var endelement = elmnt.next;
-                while (endelement && endelement.next) {
-                    endelement = endelement.next;
-                }
-                if (endelement) {
-                    endelement.next = block.next;
-                    block.prev = endelement;
-                }
-                else{
-                    endelement.next = block.next;
-                    block.prev = endelement;
-                }
+function closeDragElement(e) {
+    if(!e.target.parentElement){
+        return;
+    }
+    var elmnt = Code[Number(e.target.parentElement.id.slice(0, -6))];
+    if(!elmnt){
+        return;
+    }
+    var block = elmnt;
+    /* stop moving when mouse button is released:*/
+    document.removeEventListener("mouseup", closeDragElement);
+    document.removeEventListener("mousemove", elementDrag);
+    var left = elmnt.block.style.left;
+    left = left.slice(0, -2);
+    var top = elmnt.block.style.top;
+    top = top.slice(0, -2);
+    if (left < -180) {
+        deleteBlock(elmnt);
+        return;
+    }
+    block = searchPos(left - 75, left + 75, top - 125, top, elmnt);
+    if (block) {
+        block.block.getElementsByClassName("BlockConnector")[0].style.borderBottomColor = "#808080"
+        if (block.next) {
+            var endelement = elmnt.next;
+            while (endelement && endelement.next) {
+                endelement = endelement.next;
             }
-            block.next = elmnt;
-            elmnt.prev = block;
-            Drag(elmnt, Number(block.block.style.top.slice(0, -2)), Number(block.block.style.left.slice(0, -2)));
+            if (endelement) {
+                endelement.next = block.next;
+                block.prev = endelement;
+            }
+            else {
+                endelement.next = block.next;
+                block.prev = endelement;
+            }
         }
+        block.next = elmnt;
+        elmnt.prev = block;
+        Drag(elmnt, Number(block.block.style.top.slice(0, -2)), Number(block.block.style.left.slice(0, -2)));
     }
 }
 function Drag(element = new BlockData(), _top = 0, _left = 0) {
@@ -246,7 +260,7 @@ function Drag(element = new BlockData(), _top = 0, _left = 0) {
     element.block.style.left = (_left) + "px";
     element.pos.left = _left;
     element.pos.top = _top + 55;
-    while (element.next) {
+    while (element.next != undefined) {
         _top += 55;
         element = element.next;
         element.style.top = (_top + 55) + "px";
